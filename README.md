@@ -28,6 +28,7 @@ command prompt, I'd suggest looking at cygwin, or a linux subsystem (windows 10 
 Windows setup via Django Docs | https://docs.djangoproject.com/en/2.0/howto/windows
 
 setting up cygwin | https://cygwin.com/install.html
+
 windows 10 linux subsystem | https://www.howtogeek.com/249966/how-to-install-and-use-the-linux-bash-shell-on-windows-10
 
 #### Unix Like Systems (Linux, Mac OSX)
