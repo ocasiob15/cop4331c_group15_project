@@ -1,20 +1,16 @@
 <pre>
-                                                               
-@@@@@@@   @@@@@@@@   @@@@@@   @@@@@@@   @@@@@@@@@@   @@@@@@@@  
-@@@@@@@@  @@@@@@@@  @@@@@@@@  @@@@@@@@  @@@@@@@@@@@  @@@@@@@@  
-@@!  @@@  @@!       @@!  @@@  @@!  @@@  @@! @@! @@!  @@!       
-!@!  @!@  !@!       !@!  @!@  !@!  @!@  !@! !@! !@!  !@!       
-@!@!!@!   @!!!:!    @!@!@!@!  @!@  !@!  @!! !!@ @!@  @!!!:!    
-!!@!@!    !!!!!:    !!!@!!!!  !@!  !!!  !@!   ! !@!  !!!!!:    
-!!: :!!   !!:       !!:  !!!  !!:  !!!  !!:     !!:  !!:       
-:!:  !:!  :!:       :!:  !:!  :!:  !:!  :!:     :!:  :!:       
-::   :::   :: ::::  ::   :::   :::: ::  :::     ::    :: ::::  
- :   : :  : :: ::    :   : :  :: :  :    :      :    : :: ::   
+______ _____  ___ _________  ___ _____ 
+| ___ \  ___|/ _ \|  _  \  \/  ||  ___|
+| |_/ / |__ / /_\ \ | | | .  . || |__  
+|    /|  __||  _  | | | | |\/| ||  __| 
+| |\ \| |___| | | | |/ /| |  | || |___ 
+\_| \_\____/\_| |_/___/ \_|  |_/\____/ 
 
         .          |"|         |               ___      
     ,-_-|         _|_|_        |.===.         .|||.     
    ([o o])        (o o)        {}o o{}        (o o)     
 ooO--(_)--Ooo-ooO--(_)--Ooo-ooO--(_)--Ooo-ooO--(_)--Ooo-
+
 </pre>
 
 # SETUP
@@ -29,10 +25,11 @@ The Django project provides great docs for this. Please follow the instructions 
 download python, pip, django and virtualenv. They recommend that you know windows
 command prompt, I'd suggest looking at cygwin, or a linux subsystem (windows 10 only)
 
-[Windows setup via Django Docs | https://docs.djangoproject.com/en/2.0/howto/windows]
+Windows setup via Django Docs | https://docs.djangoproject.com/en/2.0/howto/windows
 
-[setting up cygwin | https://cygwin.com/install.html]
-[windows 10 linux subsystem | https://www.howtogeek.com/249966/how-to-install-and-use-the-linux-bash-shell-on-windows-10/]
+setting up cygwin | https://cygwin.com/install.html
+
+windows 10 linux subsystem | https://www.howtogeek.com/249966/how-to-install-and-use-the-linux-bash-shell-on-windows-10
 
 #### Unix Like Systems (Linux, Mac OSX)
 if you're running Mac OSX, or linux, most likely python is already installed, but you
@@ -40,16 +37,16 @@ may have to upgrade to python 3 (I recommend brew for Mac OSX. apt-get/yum for l
 
 You will most likely still need pip (the package manager for python)
 
-[installing pip | https://pip.pypa.io/en/stable/installing/]
+installing pip | https://pip.pypa.io/en/stable/installing
 
 pip can then be used to install django
 
 ### Git
 version control will be performed with git. Make sure you either have git, or a git client (tortoisegit or something) using windows. If you have only heard of git, here's a link on getting started.
 
-[git docs | https://git-scm.com/book/en/v1/Getting-Started]
+git docs | https://git-scm.com/book/en/v1/Getting-Started
 
-[other useful howto | https://www.taniarascia.com/getting-started-with-git/]
+other useful howto | https://www.taniarascia.com/getting-started-with-git
 
 #### Using git for this project
 even if you know git, *read this* . once your repo is cloned, be sure to follow these rules (to prevent screw ups and make life simple)
@@ -98,13 +95,13 @@ All you will need is a MySQL server running on your machine with the following c
 ### Setup
 There are a couple of ways to get MySQL running, but if you are a novice, you can use XAMPP which comes bundled with it (and phpmyadmin). otherwise, there's nothing wrong with just running mysql as a unix service using the service command. 
 
-[Windows Setup Using XAMPP | http://webdevzoom.com/install-mysql-service-on-windows-using-xampp/] 
+Windows Setup Using XAMPP | http://webdevzoom.com/install-mysql-service-on-windows-using-xampp
 
-[Other ways to install it | https://dev.mysql.com/doc/refman/5.7/en/installing.html]
+Other ways to install it | https://dev.mysql.com/doc/refman/5.7/en/installing.html
 
 if you get a bunch of errors when trying to install python packages using pip regarding mysqlclient please let me know. I had trouble (Mac OSX using homebrew) and had to edit a script called mysql_config.
 
-[here's an amusing thread that helped | https://github.com/PyMySQL/mysqlclient-python/issues/169]
+here's an amusing thread that helped | https://github.com/PyMySQL/mysqlclient-python/issues/169
 
 ### Configuration
 Make sure you have MySQL running with these settings (most are default) with a database as specified.
