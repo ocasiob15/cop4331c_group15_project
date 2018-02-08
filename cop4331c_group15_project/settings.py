@@ -36,7 +36,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'cop4331c_group15_project'
+    'cop4331c_group15_project',
+    'listing',
 ]
 
 MIDDLEWARE = [
@@ -54,7 +55,8 @@ ROOT_URLCONF = 'cop4331c_group15_project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        # JAS - added a template directory under project, so all apps can extend these templates
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

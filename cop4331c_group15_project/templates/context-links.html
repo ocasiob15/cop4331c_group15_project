@@ -1,0 +1,6 @@
+{# add contenxtual links like this in the 'template' dir of each app #}
+
+{# class 'block' should be used to make links stack (not implemented in CSS yet) #}
+{% for link in context_links %}
+<a class="{% if link.block %} block {% endif %}" href="{{link.href}}">{{link.text}}</a>
+{% endfor %}
