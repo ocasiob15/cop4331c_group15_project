@@ -16,16 +16,17 @@ ooO--(_)--Ooo-ooO--(_)--Ooo-ooO--(_)--Ooo-ooO--(_)--Ooo-
 # SETUP
 
 ## Environment Setup
-### Python 3, Pip, Django, Virtualenv, (virtualenvwrapper optional)
-Make sure you are running the latest version of python 3. along with Django.
+### Python 3, Pip, Flask, Virtualenv, (virtualenvwrapper optional)
+Make sure you are running the latest version of python 3. along with Flask.
 Links to instruction per OS below
 
 #### Windows
-The Django project provides great docs for this. Please follow the instructions to
-download python, pip, django and virtualenv. They recommend that you know windows
-command prompt, I'd suggest looking at cygwin, or a linux subsystem (windows 10 only)
+I'd suggest looking at cygwin or winbash, or a linux subsystem (windows 10 only). With that installed
+go download pip. with pip, you can install Flask
 
-Windows setup via Django Docs | https://docs.djangoproject.com/en/2.0/howto/windows
+installing pip | https://pip.pypa.io/en/stable/installing
+
+installing Flask | http://flask.pocoo.org/ 
 
 setting up cygwin | https://cygwin.com/install.html
 
@@ -39,7 +40,7 @@ You will most likely still need pip (the package manager for python)
 
 installing pip | https://pip.pypa.io/en/stable/installing
 
-pip can then be used to install django
+pip can then be used to install Flask 
 
 ### Git
 version control will be performed with git. Make sure you either have git, or a git client (tortoisegit or something) using windows. If you have only heard of git, here's a link on getting started.
@@ -57,15 +58,15 @@ even if you know git, *read this* . once your repo is cloned, be sure to follow 
 the application environment will run using virtualenv (a python library) which allows each person to use the app on their computer without running into dependency issues. virtualenv makes a local directory storing all dependencies and required versions of python. make sure you have virtualenv installed using pip.
 
 #### Setting up a virtual environment for this project
-to set it up, make sure you are in the directory for the project and run the following:
+to set it up, make sure you are outside the directory for the project and run the following:
 
 ```sh
-virtualenv env
+virtualenv -p python3 cop4331c_group15_project 
 ```
 this will run a script that creates an python environment you can 'switch into' when you download packages using pip. to switch into it run
 
 ```sh
-source env/bin/activate
+source bin/activate
 ```
 this should change the appearance of your prompt. Now, when you use pip, all packages will be downloaded for this virtual environment (because it has its own local copy of pip)
 
@@ -79,12 +80,12 @@ deactivate
 a file in the root of the project directory called 'requirements.txt' has been made by pip. to use it, make sure your in your virtualenv 'using the activate script' and run this.
 
 ```sh
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 ```
 
 if you install a new dependency and recognize other people will have to use it, you can run
 ```sh
-pip freeze > requirements.txt
+pip3 freeze > requirements.txt
 ```
 
 which will put your installed dependencies in the file. this file is tracked by git, so other members can get the python libraries they will need.

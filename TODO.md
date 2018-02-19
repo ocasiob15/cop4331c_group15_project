@@ -10,6 +10,8 @@
 </pre>
 
 ## List todo items here:
-* finish concept of operations
 * get everyone up to speed with local environments
 * plan out project (E.R models, mockups, use-case-flowcharts)
+
+## Finished Stuff
+* finish concept of operations
