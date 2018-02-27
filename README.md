@@ -90,6 +90,13 @@ pip3 freeze > requirements.txt
 
 which will put your installed dependencies in the file. this file is tracked by git, so other members can get the python libraries they will need.
 
+## Running the App
+with all of the dependencies installed using pip3, you can run the application with this command at the project root
+```sh
+python run.py
+```
+this will start the application on port 8000. to see the result, open a browser and visit http://localhost:8000
+
 ## MySQL
 All you will need is a MySQL server running on your machine with the following configurations
 
@@ -111,3 +118,4 @@ Make sure you have MySQL running with these settings (most are default) with a d
 * database = group_15_project 
 * user = root
 * password = ""
+
