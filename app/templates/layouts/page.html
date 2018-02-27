@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {% include 'layouts/regions/head.html' %} 
+  </head>
+  <body>
+    <div id="header">
+      {% include 'layouts/regions/header.html' %} 
+    </div>
+    <div id="content">
+      {% block content %}
+      {# content overwritten by child templates #}
+      {% endblock %}
+    </div>
+    <div id="footer">
+      {% include 'layouts/regions/footer.html' %} 
+    </div>
+  </body>
+</html>

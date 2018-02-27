@@ -1,9 +1,5 @@
 .DS_Store
-/bin
-/lib
-/include
-.Python
-pip-selfcheck.json
 __pycache__
 *.py[cod]
 node_modules
+env

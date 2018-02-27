@@ -58,10 +58,10 @@ even if you know git, *read this* . once your repo is cloned, be sure to follow 
 the application environment will run using virtualenv (a python library) which allows each person to use the app on their computer without running into dependency issues. virtualenv makes a local directory storing all dependencies and required versions of python. make sure you have virtualenv installed using pip.
 
 #### Setting up a virtual environment for this project
-to set it up, make sure you are outside the directory for the project and run the following:
+to set it up, make sure you are inside the directory for the project and run the following:
 
 ```sh
-virtualenv -p python3 cop4331c_group15_project 
+virtualenv -p python3 env 
 ```
 this will run a script that creates an python environment you can 'switch into' when you download packages using pip. to switch into it run
 

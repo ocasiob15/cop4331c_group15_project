@@ -1,0 +1,29 @@
+@import url("variables.less");
+
+#header, #content, #footer {
+  margin-left: auto;
+  margin-right: auto;
+  padding: 10px 20px;
+}
+
+#header {
+  height: @header-height;
+  width: 100%;
+  background-color: @color-0;
+}
+
+#content {
+  margin-top: 30px; 
+  max-width: 800px;
+  margin-bottom: @footer-height; 
+
+}
+
+#footer {
+  height: @footer-height;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: @color-0;
+}
