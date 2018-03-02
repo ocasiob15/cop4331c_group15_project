@@ -6,6 +6,8 @@ from sys import argv
 
 env = argv[1] if len(argv) > 1 else "dev"
 
+SQLALCHEMY_TRACK_MODIFICATIONS = False
+
 if env == "dev":
     # configured to use root with no password on localhost
     SQLALCHEMY_DATABASE_URI = "mysql://root:@localhost:3360/group_15_project"
