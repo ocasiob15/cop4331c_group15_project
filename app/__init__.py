@@ -1,4 +1,5 @@
-from flask import Flask, request, render_template, send_from_directory, jsonify
+from flask import Flask, flash, request, session, render_template,\
+                  send_from_directory, jsonify, redirect, url_for
 
 from werkzeug.exceptions import HTTPException
 
@@ -29,21 +30,34 @@ def default_handler(error):
 
 #register the handler for 404
 app.register_error_handler(404, default_handler)
-#register the handler for 50
-app.register_error_handler(500, default_handler)
-#register the handler for any exception (should not handle if in debug mode)
-app.register_error_handler(Exception, default_handler)
+# TODO: conditionally handle 500 errors. taken out of dev environment
+# because it was making it tricky to debug
+# register the handler for 50
+# app.register_error_handler(500, default_handler)
+# register the handler for any exception (should not handle if in debug mode)
+# app.register_error_handler(Exception, default_handler)
 
 # module controllers
-from app.auth.controllers import auth as auth_controller
-# from app.user.controllers import user as user_controller
+from app.auth.controllers    import auth    as auth_controller
+from app.user.controllers    import user    as user_controller
+from app.listing.controllers import listing as listing_controller
 # and so on...
 
 app.register_blueprint(auth_controller)
+app.register_blueprint(listing_controller)
+app.register_blueprint(user_controller)
 # see auth module for example. user model started, please adjust
 # register(user_controller)
 # register(listing_controller)
 # and so on...
+
+# had some serious trouble with getting flash messages to show up.
+# researched how to have variables accessible to all templates (instead
+# of passing each time for every route). preferred way is a context_processor
+@app.context_processor
+def template_vars():
+  user = session['user'] if 'user' in session else None
+  return dict(user=user)
 
 # paths for entity agnostic pages (home page, contact, about, whatever)
 @app.route('/')
@@ -71,4 +85,4 @@ def send_img(path):
     return send_from_directory('static/img', path)
 
 # commenting this out until we can get basic site functionality rolling
-# db.create_all()
+db.create_all()
