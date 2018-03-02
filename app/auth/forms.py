@@ -9,11 +9,15 @@ import wtforms.fields.html5 as html5
 from wtforms.validators import Required, Regexp, Length, Email, EqualTo
 
 class LoginForm(Form):
-    credentials = TextField('Credentials', [
+    credentials = TextField('Username or Email', [
         Required(message="Please enter your username or email")
         ])
+
     password = PasswordField('Password', [
-        Required(message="Please enter your password")])
+        Required(message="Please enter your password")
+        ])
+
+    submit = SubmitField("Log In")
 
 class SignupForm(Form):
 
@@ -42,7 +46,7 @@ class SignupForm(Form):
 
     password = PasswordField('Password', [
         Required(message="You must provide a password"),
-        Regexp(r"/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])/",
+        Regexp(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])",
           message=password_regexp_message),
         Length(min=8, message="Your password must be at least 8 characters long")
         ])
