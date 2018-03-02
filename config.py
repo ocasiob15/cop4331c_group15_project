@@ -10,6 +10,9 @@ if env == "dev":
     # configured to use root with no password on localhost
     SQLALCHEMY_DATABASE_URI = "mysql://root:@localhost:3360/group_15_project"
 
+    # turn off caching to prevent static resources from being cached
+    CACHE_TYPE = None
+
 elif env == "prod":
     # just change this to whatever in your production environment
     SQLALCHEMY_DATABASE_URI = "mysql://someuser:somepassword@localhost:3360/group_15_project"

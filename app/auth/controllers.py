@@ -13,7 +13,7 @@ from app.user.models import User
 auth = Blueprint('auth', __name__)
 
 @auth.route('/login/', methods=['GET', 'POST'])
-def signin():
+def login():
 
     form = LoginForm(request.form)
 
@@ -22,4 +22,15 @@ def signin():
         pass
         #user = User.query.filter_by().first()
 
-    return render_template("auth/login.html", form=form)
+    return render_template("auth/login.html", page_title="Log In", form=form)
+
+@auth.route('/signup/', methods=["GET", "POST"])
+def signup():
+
+    form = SignupForm(request.form)
+
+    if form.validate_on_submit():
+        pass
+
+    return render_template("auth/signup.html", page_title="Sign Up", form=form)
+

@@ -1,0 +1,55 @@
+{# global wtforms_type_types #}
+{# for some reason wtforms renders these as 'text' inputs. nopenopenope #}
+{% set wtf_type_types = {
+    "PasswordField" : "password",
+    "EmailField" : "email",
+    "DateField" : "date",
+  }
+%} 
+{# render form input #}
+{% macro render_input(input) %}
+  {% set css_class     = kwargs["class"]         if "class" in kwargs         else "" %}
+  {% set wrapper_class = kwargs["wrapper_class"] if "wrapper_class" in kwargs else "" %}
+  {% set css_class     = kwargs["class"]         if "class" in kwargs         else "" %}
+  {% set value         = kwargs["value"]         if "value" in kwargs         else input.default %}
+  {% set value         = value                 if value != None           else "" %}
+  {% set title         = kwargs["title"]         if "title" in kwargs         else input.description%}
+
+  {% set required    = "required"          if input.flags.required %}
+  {% set placeholder = kwargs["placeholder"] if "placeholder" in kwargs else ""%}
+
+  {# use default rendering for submit and hidden csrftoken #}
+  {% if input.type == "SubmitField" or input.type == "CSRFTokenField"%}
+    {{input()}} 
+  {% else %}
+    {% set type = wtf_type_types[input.type] if input.type in wtf_type_types else "text" %}
+    {# for all other types, wrap in a wrapper and allow attributes passed in above #}
+    <div class="form-input-wrapper half {{wrapper_class}}">
+      {{input.label}}
+      {{input(id=input.id,
+              class="form-input " + css_class,
+              placeholder=placeholder,
+              value=value,
+              required=required,
+              title=title)
+      }}
+  </div>
+  {% endif %}
+{% endmacro %}
+
+{# render form #}
+{% macro render_form(form) %}
+  {% set title = kwargs["title"] if "title" in kwargs else None %}
+  {% set action = kwargs["action"] if "action" in kwargs else "" %}
+  {% set method = kwargs["method"] if "method" in kwargs else "POST"%}
+  {% set ajax   = "ajaxified" if "ajax" in kwargs and kwargs["ajax"] else ""%}
+  {% set form_class = kwargs["form_class"] if "form_class" in kwargs else ""%}
+  <form class="{{form_class}} {{ajax}}" method="{{method}}" action="{{action}}">
+    {% if title != None %}
+      <h3>{{title}}</h3>
+    {% endif %}
+    {% for input in form %}
+      {{ render_input(input) }}
+    {% endfor %}
+  </form>
+{% endmacro %}

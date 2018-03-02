@@ -1,24 +1,36 @@
-from flask import Flask, render_template, send_from_directory
+from flask import Flask, request, render_template, send_from_directory, jsonify
+
+from werkzeug.exceptions import HTTPException
 
 from flask.ext.sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 
+# use configuration from config.py
 app.config.from_object('config')
 
+# allow matching of URLs with or without trailing '/'
+app.url_map.strict_slashes = False
+
+# initialize database using the app and its settings
 db = SQLAlchemy(app)
 
 # route error handling
 def default_handler(error):
-    if error.code >= 500:
-        # show special message on 500 errors (not run in debug mode for flask)
-        return render_template('50x.html'), error.code
+
+    code = error.code if isinstance(error,HTTPException) else 500
+
+    if code >= 500:
+        # show special message on 500 errors
+        return render_template('50x.html'), 500
     else:
         # return 404 for other status codes (even 30x)
         return render_template('404.html'), 404
 
 #register the handler for 404
 app.register_error_handler(404, default_handler)
+#register the handler for 50
+app.register_error_handler(500, default_handler)
 #register the handler for any exception (should not handle if in debug mode)
 app.register_error_handler(Exception, default_handler)
 
@@ -36,11 +48,11 @@ app.register_blueprint(auth_controller)
 # paths for entity agnostic pages (home page, contact, about, whatever)
 @app.route('/')
 def home():
-    return render_template("index.html")
+    return render_template("index.html", page_title="Crypto Auctions")
 
 @app.route('/about/')
 def about():
-    return render_template("about.html")
+    return render_template("about.html", page_title="About Us")
 
 # paths for static resources (js, css, images)
 # user requested js

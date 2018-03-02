@@ -1,12 +1,11 @@
 const 
-  gulp = require("gulp"),
-  gutil = require("gulp-util"),
-  concat = require("gulp-concat"),
-  uglify = require("gulp-uglify"),
-  less = require("gulp-less"),
-  min = require("gulp-clean-css"),
-  print = require("gulp-print"),
-  order = require('gulp-order'),
+  gulp    = require("gulp"),
+  concat  = require("gulp-concat"),
+  uglify  = require("gulp-uglify"),
+  less    = require("gulp-less"),
+  min     = require("gulp-minify-css"),
+  print   = require("gulp-print"),
+  order   = require('gulp-order'),
   plumber = require("gulp-plumber");
    
 // watch javascript files in the 'src' directory.
@@ -15,9 +14,9 @@ const
 // which causes problems with gulp-uglify
 gulp.task("js", function () {
   var sources = [
-    'js/src/*.js'
+    './js/src/*.js'
   ];
-  return gulp.watch("js/src/*js", function () {
+  return gulp.watch("./js/src/**/*.js").on('change', function () {
     // src
     gulp.src(sources)
       .pipe(order([
@@ -29,24 +28,26 @@ gulp.task("js", function () {
       .pipe(gulp.dest("js/dist/"))
       .pipe(concat("app.min.js"))
       .pipe(uglify())
-      .on('error', gutil.log)
-      .pipe(gulp.dest("js/dist/"));
-         
+      .pipe(gulp.dest("js/dist"))
  }); 
 });
 
+gulp.task("less", function () {
+
+  return gulp.src("./style/less/*.less")
+    .pipe(plumber())
+    .pipe(concat("main.css"))
+    .pipe(less())
+    .pipe(min())
+    .pipe(gulp.dest("style/css"));
+
+});
 
 // watch less files and compile into CSS
 gulp.task("css", function () {
-  return gulp.watch("style/less/*.less", function () {
-    gulp.src("style/less/*.less")
-      .pipe(plumber())
-      .pipe(less())
-      .pipe(concat("main.css"))
-      .pipe(min())
-      .pipe(gulp.dest("style/css/"));
-  });
+  return gulp.watch('./style/less/*.less', ['less']);
 });
 
 
 gulp.task("default", ["js", "css"]);
+
