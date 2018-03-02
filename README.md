@@ -90,12 +90,77 @@ pip3 freeze > requirements.txt
 
 which will put your installed dependencies in the file. this file is tracked by git, so other members can get the python libraries they will need.
 
+## Project Structure
+The structure of the app is as follows. This very helpful tutorial on writing a scalable app in Flask by Digitalocean as a starting point and reference.
+tutorial | https://www.digitalocean.com/community/tutorials/how-to-structure-large-flask-applications
+<pre>
+cop4331c_group15_project <-- root directory
++--_run.py <-- entry point, imports app
++--_config.py
++--_app 
+   +--_ __init__.py <-- allows run.py to import app as module 
+   +--_ auth <-- app.auth 
+      +--_ controller.py <-- each modules controller file handles routes
+      +--_ models.py     <-- each models file defines the DB schema
+      +--_ forms.py      <-- defines the forms using wtforms 
+   +--_ user <-- app.user
+      +--_ controller.py 
+      +--_ models.py 
+      +--_ forms.py 
+   +--_ listing <-- app.listing
+      +--_ controller.py 
+      +--_ models.py 
+      +--_ forms.py 
+   +--_ templates 
+      +--_auth
+      +--_user
+      +--_listing
+      +--_admin
+      +--_layouts <-- parent templates
+         +--_regions   <-- regions of the page (header, footer, head)
+         +--_page.html <-- main page template
+      +--_macros.jinja <-- jinja macros file to simplify templating
+   +--_ static <- static resources (JS, images, css files)
+      +--_img
+         +--_icons <-- icons for UI
+         +--_user  <-- user images
+            +--_[1..n] <-- directories named by user.id
+         +--_listing   <-- listing images
+            +--_[1..n] <-- directories named by listing.id
+      +--_js
+         +--_src <-- source files
+         +--_dist <-- minified, uglified scripts
+         +--_lib  <-- third party libraries
+      +--_style
+         +--_less <-- less files (a CSS preprocessed language)
+         +--_css  <-- minified less files
+            +--_lib <-- third party CSS files
+      +--_gulpfile.js  <-- gulp file used for gulp, see gulp section
+      +--_package.json <-- manages dependencies for the gulp build tool 
++--_README.md 
++--_TODO.md 
++--_env 
+   +--_<all the virtualenv stuff that you create with "virtualenv -p python3 env"
+</pre>
+
 ## Running the App
 with all of the dependencies installed using pip3, you can run the application with this command at the project root
 ```sh
 python run.py
 ```
 this will start the application on port 8000. to see the result, open a browser and visit http://localhost:8000
+
+## Working On Javascript and CSS
+Discussion amonst front end people revealed that we'd be okay using a task runner, which gulp was selected. gulp will watch our .less files and our .js files and will minify it into browser efficient code. To use gulp, first have nodejs and npm installed on your computer (with a terminal). Then, run the following:
+```sh
+cd cop4331c_group15_project/app/static
+# npm will read the package.json file and install everything
+npm install
+gulp
+# you may need to run this too if gulp doesn't work
+npm install gulp -g
+```
+You should see gulp running, which will allow you to change .less files and have the result atomatically minify to css. PLEASE NOTE: you will want to stop gulp before attempting to switch git branches, or performing any commits. Git will usually think that the file has changed if it is re-compiled
 
 ## MySQL
 All you will need is a MySQL server running on your machine with the following configurations
@@ -118,4 +183,7 @@ Make sure you have MySQL running with these settings (most are default) with a d
 * database = group_15_project 
 * user = root
 * password = ""
+
+### Making Changes to models.py
+If you are working on a resource, you may notice a "models.py" file where the schema is defined for that resources table. It is worth noting that SQLAlchemy (the DB abstraction library being used) will not ALTER TABLE for you automatically. In other words, once you run the app, the tables will be created; if you make a change to the model, the tables will need to be dropped in order for SQLAlchemy to make your changes
 
