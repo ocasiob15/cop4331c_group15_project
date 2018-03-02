@@ -24,8 +24,6 @@ DATABASE_CONNECT_OPTIONS = {}
 
 CSRF_ENABLED = True
 
-CSRF_SESSION_KEY = secrets.token_urlsafe(64)
-
 SECRET_KEY = secrets.token_urlsafe(64)
 
-TRAP_HTTP_EXCEPTIONS = True
+# TRAP_HTTP_EXCEPTIONS = True
