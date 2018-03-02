@@ -5,14 +5,101 @@
 @mobile-width: 320px;
 @tablet-width: 748px;
 
-/*greyscale*/
-@color-0: #FFFFFF;
-@color-1: #222222;
-@color-2: #666666;
-@color-3: #AAAAAA;
-@color-4: #DDDDDD;
+/* reserved color */
+@color-error  : #FF0022;
+@color-success: #11FF33;
 
-/*colors*/
+/** Greyscale **/
+@color-0: #FFFFFF;
+@color-1: #333333;
+@color-2: #666666;
+@color-3: #C5C5C5;
+@color-4: #DEDEDE;
+
+/** Colors **/
+/* minty */
 @color-5: #3FD49A;
-@color-6: #335599;
-@color-7: #F1084F;
+/* lavender */
+@color-6: #234fa8;
+/* cerulean */
+@color-7: #A3D9F4;
+
+/** Mixins **/
+.error {
+  color: @color-error;
+}
+
+/* cool rhombus effect using absolute positioning with the 
+ * :before and :after pseudo-elements */
+.rhomb {
+  position: relative;
+}
+
+.rhomb:before,
+.rhomb:after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  background-repeat: no-repeat;
+  height: 1em;
+  background-size: 100% 1em;
+}
+
+
+.rhomb:before {
+  background-image: url("/img/icons/rhomb-top.png");
+  bottom: 100%;
+  left: 0;
+}
+
+.rhomb:after {
+  background-image: url("/img/icons/rhomb-bottom.png");
+  top: 100%;
+  left: 0;
+  background-size: 100% 2em;
+  height: 70px;
+  background-color: @color-3;
+}
+
+@keyframes flashing {
+  0% {
+    color: #FF0000;
+  }
+  20% {
+    color: #00FF00;
+  }
+  40% {
+    color: #0000FF;
+  }
+  60% {
+    color: #FFFF00;
+  }
+  80% {
+    color: #00FF00;
+  }
+}
+
+@webkit-keyframes flashing {
+  0% {
+    color: #FF0000;
+  }
+  20% {
+    color: #00FF00;
+  }
+  40% {
+    color: #0000FF;
+  }
+  60% {
+    color: #FFFF00;
+  }
+  80% {
+    color: #00FF00;
+  }
+}
+
+.flashing {
+  -webkit-animation: flashing .5s steps(5, start) infinite;
+  -moz-animation   : flashing .5s steps(5, start) infinite;
+  animation        : flashing .5s steps(5, start) infinite;
+  font-weight: 600;
+}
