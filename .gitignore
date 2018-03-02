@@ -3,3 +3,5 @@ __pycache__
 *.py[cod]
 node_modules
 env
+app/static/img/user/*
+app/static/img/listing/*
