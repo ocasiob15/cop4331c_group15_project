@@ -140,7 +140,7 @@ cop4331c_group15_project <-- root directory
 +--_README.md 
 +--_TODO.md 
 +--_env 
-   +--_<all the virtualenv stuff that you create with "virtualenv -p python3 env"
+   +--_ <-- all the virtualenv stuff that you create with "virtualenv -p python3 env"
 </pre>
 
 ## Running the App
