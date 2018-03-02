@@ -1,4 +1,5 @@
 {% extends 'layouts/page.html' %}
 {% block content %}
-{# render the form #}
+  {# render the form #}
+  {{macros.render_form(form=form, title="Log In", method="POST",action="/login", form_class="login")}}
 {% endblock %}

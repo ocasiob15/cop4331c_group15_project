@@ -1,0 +1,15 @@
+{% extends "layouts/page.html" %}
+{% block content %}
+  {% set is_user = user['id'] == viewed_user.id %}
+
+  <div class="nav">
+    <a href="{{url_for("user.account")}}">View Account</a>
+  </div>
+
+  {# render the edit user form #}
+
+  <div class="nav">
+    <a href="{{url_for("user.delete", id=user['id'])}}">Delete Account</a>
+  </div>
+
+{% endblock %}

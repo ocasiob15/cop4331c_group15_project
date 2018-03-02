@@ -1,0 +1,36 @@
+{% extends "layouts/page.html" %}
+{% block content %}
+  {% set is_user = user['id'] == viewed_user.id %}
+  <div class="nav">
+    {% if is_user %}
+      <a href="{{url_for("user.edit", id=user['id'])}}">Edit Account</a>
+    {% else %}
+      {# assumed the profile is visited from listing #}
+      <a href="{{url_for("listing.browse")}}">Back to Listings</a>
+    {% endif %}
+  </div>
+  {% if is_user %}
+
+    <h2>Your Account</h2>
+    
+    <h4>Account Info</h4>
+    <div class="field name">{{viewed_user.first_name}} {{viewed_user.last_name}}</div>
+    <div class="field email">{{viewed_user.email}}</div>
+
+    <h4>Your Listings</h4>
+    <div data-user="{{viewed_user.id}} class="aggregate listing user-created"></div>
+
+    <h4>Bought by You</h4>
+    <div data-user="{{viewed_user.id}} class="aggregate listing user-bought"></div>
+
+  {% else %}
+
+    <h2>{{viewed_user}}'s Profile</h2>
+
+    <h3>{{viewed_user.username}}'s Listings</h3>
+    <div data-user="{{viewed_user.id}}" =class="aggregate listing user-created"></div>
+
+  {% endif %}
+
+
+{% endblock %}

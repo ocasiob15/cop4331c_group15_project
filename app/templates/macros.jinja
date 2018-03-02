@@ -39,12 +39,17 @@
 
 {# render form #}
 {% macro render_form(form) %}
-  {% set title = kwargs["title"] if "title" in kwargs else None %}
+  {% set title  = kwargs["title"] if "title" in kwargs else None %}
   {% set action = kwargs["action"] if "action" in kwargs else "" %}
   {% set method = kwargs["method"] if "method" in kwargs else "POST"%}
   {% set ajax   = "ajaxified" if "ajax" in kwargs and kwargs["ajax"] else ""%}
   {% set form_class = kwargs["form_class"] if "form_class" in kwargs else ""%}
   <form class="{{form_class}} {{ajax}}" method="{{method}}" action="{{action}}">
+    {% if form.errors %}
+      {% for reason, message in form.errors.items() %}
+      <div class="message error">{{message}}</div> 
+      {% endfor %}
+    {% endif %}
     {% if title != None %}
       <h3>{{title}}</h3>
     {% endif %}

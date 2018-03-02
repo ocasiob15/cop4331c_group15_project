@@ -1,6 +1,27 @@
 <div class="nav">
   <!-- top navigation-->
   <a title="homepage" href="/">Top</a>
-  <a title="sign up today" href="/signup">Sign Up</a>
-  <a title="browse listings" href="/search">Search</a>
+  <a title="browse listings" href="/browse">Search</a>
+  {# TODO: replace conditions below with checks for user in session #}
+  {% if user is mapping %}
+    <span>Hi, <a title="your account" href="{{url_for("user.account")}}">{{user.username}}</a></span>
+    <a title="log out of your account" href="{{url_for("auth.logout")}}">Log Out</a>
+  {% else %}
+    <a title="sign up today" href="{{url_for("auth.signup")}}">Sign Up</a>
+    <a title="log in with account" href="{{url_for("auth.login")}}">Log In</a>
+  {% endif %}
+  {# check if admin flag is asserted #}
+  {% if user.admin == 1 %}
+    {# grant the keys to the kingdom #}
+    <a title="admin page" href="url_for("admin.index")">Admin Panel</a>
+  {% endif %}
+
 </div>
+{% with flash_messages = get_flashed_messages(with_categories=True) %}
+  {% if flash_messages %}
+    <br/>
+    {% for category, message in flash_messages %}
+      <div class="flash-message {{category}}">{{message}}</div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}

@@ -1,20 +1,20 @@
 <div class="nav third">
   <h5>Top</h5>
-  {# anon user links #}
-  <a title="homepage" href="/">Home</a>
-  <a title="search listings" href="/search">Sign up</a>
-  {% if 1 %}
-  <a title="login"    href="/login">Log in</a>
-  <a title="signup"   href="/signup">Sign up</a>
-  {# auth. user links. not rendered for now #}
-  {% elif 0 %}
-  <a title="my account" href="/my-account">My Account</a>
-  <a title="logout"   href="/logout">Log out</a>
+  <a title="homepage" href="{{url_for("home")}}">Home</a>
+  <a title="search listings" href="{{url_for("listing.browse")}}">Search</a>
+  {% if user is mapping %}
+    <a title="my account" href="{{url_for("user.account")}}">My Account</a>
+    <a title="logout"     href="{{url_for("auth.logout")}}">Log out</a>
+  {% else %}
+    <a title="signup" href="{{url_for("auth.signup")}}">Sign up</a>
+    <a title="login"  href="{{url_for("auth.login")}}">Log in</a>
   {% endif %}
 </div>
 <div class="nav third">
   <h5>Contact</h5>
+  <a title="learn more about us" href="{{url_for("about")}}">About Us</a>
 </div>
 <div class="nav third">
   <h5>Technical</h5>
+  <a title="help page" href="/help/">Help</a>
 </div>
