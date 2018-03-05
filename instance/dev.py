@@ -12,7 +12,7 @@ SQLALCHEMY_DATABASE_URI = "mysql://root:@localhost:3360/group_15_project"
 # turn off caching to prevent static resources from being cached
 CACHE_TYPE = None
 
-AUCTION_SITE_URL = "http://localhost:8000"
+AUCTION_SITE_ROOT = "http://localhost:8000"
 
 MAIL_SERVER   = "smtp.gmail.com"
 MAIL_PORT     = "465"

@@ -9,7 +9,7 @@ AUCTION_SITE_TITLE = "Auction Website"
 # just change this to whatever in your production environment
 SQLALCHEMY_DATABASE_URI = "mysql://someuser:somepassword@localhost:3360/group_15_project"
 
-AUCTION_SITE_URL = "[put some domain here for site root url]"
+AUCTION_SITE_ROOT = "[put some domain here for site root url]"
 
 MAIL_SERVER   = "mail.somedomain.com"
 MAIL_PORT     = "465"
