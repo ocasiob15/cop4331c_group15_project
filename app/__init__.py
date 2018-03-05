@@ -1,20 +1,29 @@
 from flask import Flask, flash, request, session, render_template,\
                   send_from_directory, jsonify, redirect, url_for
 
+from flask_mail import Mail
+
 from werkzeug.exceptions import HTTPException
 
 from flask_sqlalchemy import SQLAlchemy
 
-app = Flask(__name__)
+app = Flask(__name__, instance_relative_config=True)
+
+from sys import argv
+
+env = argv[1] if len(argv) > 1 else "dev"
 
 # use configuration from config.py
-app.config.from_object('config')
+app.config.from_pyfile( env + '.py')
 
 # allow matching of URLs with or without trailing '/'
 app.url_map.strict_slashes = False
 
 # initialize database using the app and its settings
-db = SQLAlchemy(app)
+db   = SQLAlchemy(app)
+
+# initialize mail
+mail =  Mail(app)
 
 # route error handling
 def default_handler(error):
@@ -56,8 +65,14 @@ app.register_blueprint(user_controller)
 # of passing each time for every route). preferred way is a context_processor
 @app.context_processor
 def template_vars():
+  # user logged into the site
   user = session['user'] if 'user' in session else None
-  return dict(user=user)
+
+  # the base URL for the website (for templates and links)
+  site_root  = app.config['AUCTION_SITE_ROOT']
+  site_title = app.config['AUCTION_SITE_TITLE']
+
+  return dict(user=user, site_title=site_title, site_root=site_root)
 
 # paths for entity agnostic pages (home page, contact, about, whatever)
 @app.route('/')
