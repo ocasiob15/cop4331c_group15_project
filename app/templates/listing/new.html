@@ -1,5 +1,15 @@
 {% extends "layouts/page.html" %}
 {% block content%}
-  <h2>Create Listing</h2>
-  {# TODO: inject create form here #}
+  {{macros.render_form(
+    form,
+    title="Create Listing",
+    method="POST",
+    action="/listing/new",
+    wrapper_class_map={
+      "bitcoin": "half",
+      "style": "half",
+      "start": "half",
+      "end": "half"
+    })
+  }}
 {% endblock %}

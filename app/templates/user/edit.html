@@ -6,7 +6,13 @@
     <a href="{{url_for("user.account")}}">View Account</a>
   </div>
 
-  {# render the edit user form #}
+  {{ macros.render_form(
+      form,
+      form_title="Edit Account",
+      action=url_for("user.edit",id=viewed_user.id),
+      method="PUT",
+      data_controller="user-edit-form")
+  }}
 
   <div class="nav">
     <a href="{{url_for("user.delete", id=user['id'])}}">Delete Account</a>

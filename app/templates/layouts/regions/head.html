@@ -15,5 +15,29 @@
 
 <!-- JS -->
 {# todo: replace with minified version outside of dev environment #}
-<script src="js/lib/jquery/jquery-3.2.0.min.js"></script>
-<script src="js/dist/app.js"></script>
+<script src="/js/lib/jquery/jquery-3.2.0.min.js"></script>
+{# inline JavaScript to embed site configurations #}
+<script>
+window.app = (function () {
+
+  const site_root = function () {
+
+    return "{{site_root}}";
+
+  }
+
+  const site_title = function () {
+
+    return "{{site_title}}";
+
+  }
+
+  return {
+    site_root  : site_root,
+    site_title : site_title 
+  };
+
+})();
+</script>
+{# include site javascript which references embeded global above #}
+<script src="/js/dist/app.js"></script>
