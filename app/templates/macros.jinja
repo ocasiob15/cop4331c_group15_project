@@ -12,28 +12,38 @@
   {% set wrapper_class = kwargs["wrapper_class"] if "wrapper_class" in kwargs else "" %}
   {% set css_class     = kwargs["class"]         if "class" in kwargs         else "" %}
   {% set value         = kwargs["value"]         if "value" in kwargs         else input.default %}
-  {% set value         = value                 if value != None           else "" %}
+  {% set value         = value                   if value != None           else "" %}
   {% set title         = kwargs["title"]         if "title" in kwargs         else input.description%}
 
-  {% set required    = "required"          if input.flags.required %}
+  {% set required    = "required"          if input.flags.required else ""%}
   {% set placeholder = kwargs["placeholder"] if "placeholder" in kwargs else ""%}
 
   {# use default rendering for submit and hidden csrftoken #}
-  {% if input.type == "SubmitField" or input.type == "CSRFTokenField"%}
+  {% if input.type in ["SubmitField", "CSRFTokenField", "HiddenField"] %}
     {{input()}} 
-  {% else %}
+  {% elif required %}
     {% set type = wtf_type_types[input.type] if input.type in wtf_type_types else "text" %}
     {# for all other types, wrap in a wrapper and allow attributes passed in above #}
-    <div class="form-input-wrapper half {{wrapper_class}}">
+    <div class="form-input-wrapper {{input.name}} {{wrapper_class}}">
       {{input.label}}
       {{input(id=input.id,
-              class="form-input " + css_class,
+              class="form-input " + input.name + " " + css_class,
               placeholder=placeholder,
               value=value,
               required=required,
               title=title)
       }}
-  </div>
+    </div>
+  {% else %}
+    <div class="form-input-wrapper {{input.name}} {{wrapper_class}}">
+      {{input.label}}
+      {{input(id=input.id,
+              class="form-input " + input.name + " " + css_class,
+              placeholder=placeholder,
+              value=value,
+              title=title)
+      }}
+    </div>
   {% endif %}
 {% endmacro %}
 
@@ -42,9 +52,15 @@
   {% set title  = kwargs["title"] if "title" in kwargs else None %}
   {% set action = kwargs["action"] if "action" in kwargs else "" %}
   {% set method = kwargs["method"] if "method" in kwargs else "POST"%}
-  {% set ajax   = "ajaxified" if "ajax" in kwargs and kwargs["ajax"] else ""%}
+  {% set data_controller = kwargs["data_controller"] if "data_controller" in kwargs else None %}
+  {% set data_controller = "data-controller=\""+ data_controller +"\"" if data_controller else "" %}
   {% set form_class = kwargs["form_class"] if "form_class" in kwargs else ""%}
-  <form class="{{form_class}} {{ajax}}" method="{{method}}" action="{{action}}">
+
+  {# mappings of input names to CSS class #}
+  {% set input_class_map   = kwargs["input_class_map"]   if "input_class_map"   in kwargs else {} %}
+  {% set wrapper_class_map = kwargs["wrapper_class_map"] if "wrapper_class_map" in kwargs else {} %}
+
+  <form class="{{form_class}}" {{data_controller}} method="{{method}}" action="{{action}}">
     {% if form.errors %}
       {% for reason, message in form.errors.items() %}
       <div class="message error">{{message}}</div> 
@@ -54,7 +70,10 @@
       <h3>{{title}}</h3>
     {% endif %}
     {% for input in form %}
-      {{ render_input(input) }}
+      {% set value = input.data or None %}
+      {% set input_class   = input_class_map[input.name]   if input.name in input_class_map else   "" %}
+      {% set wrapper_class = wrapper_class_map[input.name] if input.name in wrapper_class_map else "" %}
+      {{ render_input(input, value=value, class=input_class, wrapper_class=wrapper_class)}}
     {% endfor %}
   </form>
 {% endmacro %}
