@@ -1,6 +1,6 @@
 (function () {
 
-  var api = app.api_endpoint;
+  var api_endpoint = app.api_endpoint;
   
   // do the thing
   $.fn.ajaxify = function (configs) {
@@ -119,7 +119,7 @@
           // remove after three seconds
           $this.removeClass('error');
 
-        }, 3000)
+        }, 3000);
       
       });
 
@@ -127,4 +127,4 @@
 
   }
 
-})(app)
+})();

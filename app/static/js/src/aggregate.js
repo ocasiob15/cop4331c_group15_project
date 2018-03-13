@@ -29,10 +29,17 @@
       }
 
       // else, loop through found results
+      for (var i = 0; i < results.length; i++) {
 
         // take data from results and pass into record template function
-        
+        var data = results[i];
+
+        var $record = record_template(data); 
+
         // append record template to $this
+        $this.append($record); 
+
+      }
         
     };
 

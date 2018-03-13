@@ -6,8 +6,6 @@ app.controller("user-edit-form", function ($form) {
 
   function handle_results (result) {
 
-    console.log(result);
-
   }
 
   $form.ajaxify({
