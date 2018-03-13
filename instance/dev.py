@@ -15,10 +15,9 @@ CACHE_TYPE = None
 AUCTION_SITE_ROOT = "http://localhost:8000"
 
 MAIL_SERVER   = "smtp.gmail.com"
-MAIL_PORT     = "465"
-MAIL_USE_TLS  = False
+MAIL_PORT     = 465
 MAIL_USE_SSL  = True
-MAIL_USERNAME = "cop4331cgroup15@gmail.com"
+MAIL_USERNAME = "cop4331cgroup15test@gmail.com"
 MAIL_PASSWORD = "aA@12345"
 
 DATABASE_CONNECT_OPTIONS = {}
