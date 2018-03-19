@@ -34,6 +34,7 @@ class User(db.Model):
     # 1 = blocked, 0 = unblocked
     blocked = db.Column(INTEGER(display_width=1, unsigned=True), nullable=False, default=1)
 
+
     def __init__(self, first_name, last_name, username, email, hash):
         self.first_name = first_name
         self.last_name  = last_name
