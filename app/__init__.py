@@ -11,6 +11,10 @@ app = Flask(__name__, instance_relative_config=True)
 
 from sys import argv
 
+from datetime import datetime
+
+import json
+
 env = argv[1] if len(argv) > 1 else "dev"
 
 # use configuration from config.py
@@ -50,11 +54,13 @@ app.register_error_handler(404, default_handler)
 from app.auth.controllers    import auth    as auth_controller
 from app.user.controllers    import user    as user_controller
 from app.listing.controllers import listing as listing_controller
+from app.payment.controllers import payment as payment_controller
 # and so on...
 
 app.register_blueprint(auth_controller)
 app.register_blueprint(listing_controller)
 app.register_blueprint(user_controller)
+app.register_blueprint(payment_controller)
 # see auth module for example. user model started, please adjust
 # register(user_controller)
 # register(listing_controller)
@@ -72,7 +78,14 @@ def template_vars():
   site_root  = app.config['AUCTION_SITE_ROOT']
   site_title = app.config['AUCTION_SITE_TITLE']
 
-  return dict(user=user, site_title=site_title, site_root=site_root)
+  # always include these args to templates
+  return dict(
+      user=user,
+      site_title=site_title,
+      site_root=site_root,
+      datetime=datetime,
+  )
+
 
 # paths for entity agnostic pages (home page, contact, about, whatever)
 @app.route('/')
@@ -82,6 +95,10 @@ def home():
 @app.route('/about/')
 def about():
     return render_template("about.html", page_title="About Us")
+
+@app.route('/help/')
+def help():
+    return render_template("help.html", page_title="Help")
 
 # paths for static resources (js, css, images)
 # user requested js
