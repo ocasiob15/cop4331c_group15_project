@@ -24,6 +24,8 @@
 
     }
 
+    $this.addClass('ajaxified');
+
     $this.submit(function (e) {
 
       e.preventDefault();
@@ -95,14 +97,14 @@
         // add the finished class. could put 'finished' inside
         // of form. could add an animated check mark icon. This
         // is really up to the CSS styling
-        $this.addClass('finished');
+        $this.addClass("finished");
 
         window.setTimeout(function () {
 
           // remove after three seconds
           $this.removeClass('finished');
 
-        }, 3000)
+        }, 3000);
 
       })
       .catch(function (error) {
@@ -124,6 +126,8 @@
       });
 
     });
+
+    return this;
 
   }
 

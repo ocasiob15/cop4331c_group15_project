@@ -22,12 +22,15 @@
 
     on_load = configs.on_load || function (results) {
 
-      console.log(results); 
+      results = results || [];
 
-      if (!results) {
+      $this.empty();
+
+      if (!results.length) {
         $this.append((typeof no_record_msg === "function"? no_record_msg(): no_record_msg));
       }
 
+      console.log(results);
       // else, loop through found results
       for (var i = 0; i < results.length; i++) {
 
@@ -51,16 +54,40 @@
       on_prev     = configs.on_prev     || function () {};
     }
 
-    function reload_records() {
+    function reload_records(data) {
 
-      // todo, get pagination keys. pass into data
+      // allow data to be injected from elsewhere
+      data = data || null;
 
+      if (data !== null) {
+
+        on_load(data);
+
+        return;
+
+      }
+
+      console.log(source, params);
+      if (source === null)
+        return;
+
+
+      // otherwise, try sending AJAX request to source 
+      // specified with parameters, then use the on_load
+      // event handler
+     
+      // TODO: get pagination keys. pass into data
       api_endpoint({
         url: source,
         method: "GET",
         data: (typeof params === "function" ? params() : params)
       })
-      .then(on_load);
+      .then(on_load)
+      .catch(function (error) {
+
+        console.error(error); 
+
+      });
 
     }
 
@@ -68,6 +95,10 @@
     reload_records();
 
     // todo: bind events to paginators (if enabled)
+    
+    this.reload_records = reload_records;
+
+    return $(this);
 
   };
 
