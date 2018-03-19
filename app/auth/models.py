@@ -7,11 +7,11 @@ class UserAuthentication(db.Model):
 
   __tablename__ = "user_authentication"
 
+  auth_token = db.Column(db.VARCHAR(86), nullable=False, primary_key=True)
+
   user_id = db.Column(INTEGER(display_width=10, unsigned=True),
                       ForeignKey("user.id"),
-                      primary_key=True)
-
-  auth_token = db.Column(db.VARCHAR(86), nullable=False)
+                      unique=True)
 
   def __init__ (self, user_id, auth_token):
     self.user_id    = user_id

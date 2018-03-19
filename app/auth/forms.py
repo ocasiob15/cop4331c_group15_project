@@ -1,7 +1,5 @@
 from flask_wtf import Form
 
-import wtforms as wtf
-
 from wtforms import TextField, PasswordField, SubmitField
 
 import wtforms.fields.html5 as html5
