@@ -25,40 +25,171 @@
 @color-7: #A3D9F4;
 
 /** Mixins **/
+.transition-property(...) {
+  -webkit-transition: @arguments;
+  -moz-transition: @arguments;
+  -o-transition: @arguments;
+  transition: @arguments;
+}
+
 .error {
   color: @color-error;
 }
 
-/* cool rhombus effect using absolute positioning with the 
- * :before and :after pseudo-elements */
-.rhomb {
-  position: relative;
+.inline {
+  display: inline-block;
 }
 
+/* cool rhombus effect using absolute positioning with the 
+ * :before and :after pseudo-elements */
+.rhomb, .diamond {
+  position: relative;
+  margin-bottom: 5em;
+}
+
+.pentagon:after,
+.diamond:before,
+.diamond:after,
 .rhomb:before,
 .rhomb:after {
   content: "";
   position: absolute;
   width: 100%;
   background-repeat: no-repeat;
-  height: 1em;
-  background-size: 100% 1em;
+  height: 5em;
+  background-size: 100% 100%;
+  left: 0;
 }
 
 
+.diamond:before,
 .rhomb:before {
-  background-image: url("/img/icons/rhomb-top.png");
   bottom: 100%;
   left: 0;
 }
 
+.rhomb:before {
+  background-image: url("/img/icons/rhomb-top.png");
+}
+
+.diamond:before {
+  background-image: url("/img/icons/diamond-top.png");
+}
+
 .rhomb:after {
-  background-image: url("/img/icons/rhomb-bottom.png");
   top: 100%;
   left: 0;
-  background-size: 100% 2em;
-  height: 70px;
-  background-color: @color-3;
+  background-size: 100% 100%;
+  height: 3em;
+}
+
+.rhomb:after {
+  background-image: url("/img/icons/rhomb-bottom.png");
+}
+
+.pentagon:after,
+.diamond:after {
+  background-image: url("/img/icons/diamond-bottom.png");
+  top: 100%;
+}
+
+/* loading dots animation */
+@keyframes waiting {
+  0% {
+    content: "."
+  }
+
+  33.33% {
+    content: "."
+  }
+
+  33.333% {
+    content: ".."
+  }
+
+  66.663% {
+    content: ".."
+  }
+
+  66.666% {
+    content: "..."
+  }
+
+  100% {
+    content: "..."
+  }
+
+}
+
+/* fly in and vanish */
+@keyframes fly-in {
+
+  0% {
+    left: 30%;
+    opacity: 0;
+  }
+
+  30% {
+
+    left: 0%;
+    opacity: 1;
+
+  }
+
+
+  90% {
+
+    left: 0%;
+    opacity: 1;
+
+  }
+
+  100% {
+
+    left: -10%;
+    opacity: 0;
+
+  }
+
+}
+
+/* mix in */
+.fly-in {
+  animation: fly-in 1 3s;
+}
+
+.waiting, .finished, .error {
+  position: relative; 
+}
+
+.waiting:before, .finished:before, .error:before {
+  position: absolute; 
+  bottom  : 100%;
+  left    : 0;
+  font-size: 1.5em;
+}
+
+/* by defaut, elipsis show up above the element. overwrite as necessary */
+.waiting:before {
+  content  : "";
+  animation: waiting 2s infinite;
+  color    : @color-6;
+}
+
+/* by default offer a checkmark to indicate success */
+.finished:before {
+  content : "OK";
+  color    : @color-6;
+  opacity: 0;
+  .fly-in;
+}
+
+/* by default offer an X to indicate error */
+.error:before {
+  content : "x";
+  color    : @color-error;
+  opacity: 0;
+  .fly-in;
 }
 
 @keyframes flashing {
@@ -95,6 +226,21 @@
   80% {
     color: #00FF00;
   }
+}
+
+span.dollars:before {
+  content: "$"
+}
+
+span.bitcoin:before {
+  content: "\0E3F"
+}
+
+.framed {
+  border-top: 1px solid @color-4;
+  border-right: 1px solid @color-4;
+  border-left: 1px solid @color-4;
+  border-bottom: none;
 }
 
 .flashing {

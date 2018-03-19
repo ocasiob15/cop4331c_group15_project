@@ -1,0 +1,125 @@
+/**** LISTING ****/
+form.left-justified.listing-search {
+  max-width: none
+}
+
+form.listing-search .form-input-wrapper {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+form.listing-search .form-input-wrapper.keyword, 
+form.listing-search .form-input-wrapper.start, 
+form.listing-search .form-input-wrapper.end{
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.field-wrapper.ask {
+  position: absolute;
+  top  : -15px;
+  left : -15px;
+  border: 1px solid @color-4;
+  padding: 5px;
+  background-color: @color-0;
+}
+
+.listing.record {
+  padding-top: 1.3em;
+  padding-bottom: 2em;
+  margin-bottom: 50px;
+  margin-right: 25px;
+}
+
+.listing.record .field.title {
+  font-size: 1.3em;
+}
+
+.listing.record .field-wrapper.type {
+  position: absolute;
+  bottom: -20px;
+  left: -20px;
+  background-color: @color-6;
+  color: @color-0;
+  text-align: center;
+  display: table;
+  border-radius: 200px;
+  padding: 10px;
+}
+
+.listing.record .field.type {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+/** Edit Listing **/
+.listing.edit {
+  width: 600px;
+  margin: 0 auto;
+}
+
+form.update-listing > h3,
+form.update-listing .form-input-wrapper {
+  max-width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+/** Listing Form **/
+.form-input-wrapper.bitcoin > label
+.form-input-wrapper.bitcoin > input {
+  display: inline-block;
+}
+
+.aggregate.image {
+  overflow: auto;
+}
+
+.image-wrapper > div.button.delete {
+  position: absolute;
+  border-radius:  200px;
+  width: 50px;
+  height: 50px;
+  padding: 5px;
+  background-color: @color-0;
+  color: @color-1;
+  display: table;
+  vertical-align: middle;
+  top: -15px;
+  left: -15px;
+ } 
+
+.image-wrapper > div.button.delete:after {
+  content: "X";
+  display: table-cell;
+  vertical-align: middle;
+}
+
+
+/** Media Queries **/
+@media screen and (max-width: @tablet-width) {
+
+  .listing.record {
+    display:block;
+    width: auto;
+  }
+
+  .listing.record .field-wrapper.title {
+    display: block;
+  }
+
+  .listing.record .field-wrapper {
+    display: inline-block;
+    vertical-align: top;
+    margin-right: 20px;
+  }
+
+  form.listing-search .form-input-wrapper.keyword, 
+  form.listing-search .form-input-wrapper.start, 
+  form.listing-search .form-input-wrapper.end{
+    white-space: normal;
+    display: block;
+  }
+
+}

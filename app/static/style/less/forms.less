@@ -6,6 +6,13 @@
   font-size: .7em;
 }
 
+textarea {
+  width: 100%;
+  min-height: 120px;
+  color: @color-1;
+  resize: none;
+}
+
 input[type="submit"] {
   margin-top: 15px;
   margin-left: auto;
@@ -14,18 +21,23 @@ input[type="submit"] {
 }
 
 form {
-  max-width: 600px;
+  max-width: 500px;
   margin   : 0 auto;
 }
 
 form.left-justified {
-  max-width: 600px;
+  max-width: 500px;
   margin   : 0;
 }
 
 form.left-justified input[type="submit"] {
   margin-left: 0;
   margin-right: 0;
+}
+ 
+.form-input-wrapper {
+  margin-top : 20px;
+  margin-bottom: 25px;
 }
 
 .form-input-wrapper.half {
@@ -38,22 +50,123 @@ form.left-justified input[type="submit"] {
   margin: 5px auto 15px;
   display: block;
   width: 100%;
-  max-width: 300px;
 }
 
 .form-input-wrapper > .form-input {
   display: inline-block;
 }
 
+input[required]:after, label.required:after,
+.form-input-wrapper.required label:after {
+  content: "*";
+  font-size: 1em;
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: .5em;
+}
+
 form .message {
   text-align: center;
 }
 
+/* reserve a small amount of space at top of form for icon communication */
+form.left-justified.ajaxified,
+form.ajaxified {
+  margin-top: 3em;
+}
+
+form[method=PUT].finished:before {
+  content: "Saved"
+}
+
+form[method=GET].finished:before,
+form[method=POST].finished:before,
+form[method=DELETE].finished:before {
+  content: "Done"
+}
+
+.form-prompt {
+  font-size: .8em;
+}
+
+.image-loader-wrapper input[type=file] {
+  position: absolute;
+  width: .1px;
+  height: .1px;
+  z-index: -1;
+}
+
+.image-loader-wrapper input[type=file] + label {
+  display: inline-block;
+  padding: 5px 10px; 
+  background-color: @color-6;
+  border-radius: 4px;
+  color: @color-0;
+}
+
+.image-loader-display {
+  overflow: auto;
+}
+
+
+.image-wrapper {
+  position: relative;
+  margin-right: 20px;
+  display: table;
+  height: 175px;
+  width: 175px;
+  float: left;
+  border-top: 1px solid @color-4;
+  border-bottom: 1px solid @color-4;
+}
+
+.image-wrapper > div {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.image-wrapper img {
+  height: auto;
+  width: 100%;
+}
+
+.image-loader-wrapper input[type=file] + label:hover {
+  cursor: pointer;
+}
+
+.image-loader-wrapper input[type=file]:focus + label {
+  outline: 1px dotted @color-3;
+}
+
+input[type="email"], input[type="number"], input[type="search"], input[type="text"],
+input[type="tel"], input[type="url"], input[type="password"] {
+  max-width: 300px;
+}
+
+input[type=date] {
+  padding: 5px 3px;
+  border-radius: 4px;
+  border: 1px solid @color-4;
+}
+
 @media screen and (max-width: @tablet-width) {
+
   .form-input-wrapper.half {
     width: auto;
     margin-right: 0;
     display: block;
+  }
+
+  .form-input-wrapper.third {
+    width: auto;
+    margin-right: 0;
+    display: block;
+  }
+
+  input[type=text], input[type=password], input[type=email],
+  input[type=date] {
+    max-width: none;
+    width: auto;
   }
 
 }

@@ -1,0 +1,21 @@
+/**** WIDGETS ****/
+
+/** Modal Dialogue **/
+div.modal { 
+  position: fixed;
+  top: 25%;
+  left: 100%;
+  margin-left: -160px;
+  width: 300px;
+  min-height: 150px;
+  padding: 20px 10px;
+  .transition-property(left .5s)
+}
+
+div.modal.loaded {
+  left: 320px;
+}
+
+div.modal.loaded.finished {
+  left: -320px;
+}

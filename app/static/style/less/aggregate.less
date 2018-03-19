@@ -1,0 +1,38 @@
+/**** AGGREGATE ****/
+
+.aggregate {
+  padding: 20px 0 30px 15px;
+}
+
+/* it will be much more common to want
+ * to display records side by side (inline-block)
+ * instead of stacked (block)*/
+.aggregate .record {
+  position: relative;
+  display: inline-block; 
+  vertical-align: top;
+  margin-right: 15px;
+  margin-bottom: 15px;
+  padding: 10px 10px 15px;
+  width: 200px;
+  .framed;
+}
+
+/* always stack records if the aggregate has class tabluar
+ * reasoning: tables have records as rows */
+.aggregate.tabular .record {
+  display: block; 
+}
+
+.label {
+  color: @color-6;
+  margin-right: 10px;  
+}
+
+@media screen and (max-width: @mobile-width) {
+
+  .aggregate .record {
+    display: block;
+  }
+
+}
