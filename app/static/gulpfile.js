@@ -20,8 +20,14 @@ gulp.task("js", function () {
     // src
     gulp.src(sources)
       .pipe(order([
-        'app.js',
-        '*.js'
+        'api.js',
+        'controller.js',
+        'ajaxify.js',
+        'aggregate.js',
+        'image_loader.js',
+        'templates.js',
+        '*.js',
+        'app.js'
       ]))
       .pipe(plumber())
       .pipe(concat("app.js"))
