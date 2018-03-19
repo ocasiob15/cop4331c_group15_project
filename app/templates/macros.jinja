@@ -1,11 +1,3 @@
-{# global wtforms_type_types #}
-{# for some reason wtforms renders these as 'text' inputs. nopenopenope #}
-{% set wtf_type_types = {
-    "PasswordField" : "password",
-    "EmailField" : "email",
-    "DateField" : "date",
-  }
-%} 
 {# render form input #}
 {% macro render_input(input) %}
   {% set css_class     = kwargs["class"]         if "class" in kwargs         else "" %}
@@ -14,6 +6,10 @@
   {% set value         = kwargs["value"]         if "value" in kwargs         else input.default %}
   {% set value         = value                   if value != None           else "" %}
   {% set title         = kwargs["title"]         if "title" in kwargs         else input.description%}
+
+  {% if input.type == "BooleanField" %}
+    {% set value = "1" %}
+  {% endif %}
 
   {% set required    = "required"          if input.flags.required else ""%}
   {% set placeholder = kwargs["placeholder"] if "placeholder" in kwargs else ""%}
@@ -24,7 +20,7 @@
   {% elif required %}
     {% set type = wtf_type_types[input.type] if input.type in wtf_type_types else "text" %}
     {# for all other types, wrap in a wrapper and allow attributes passed in above #}
-    <div class="form-input-wrapper {{input.name}} {{wrapper_class}}">
+    <div class="form-input-wrapper {{input.name}} {{wrapper_class}} required">
       {{input.label}}
       {{input(id=input.id,
               class="form-input " + input.name + " " + css_class,
@@ -52,6 +48,7 @@
   {% set title  = kwargs["title"] if "title" in kwargs else None %}
   {% set action = kwargs["action"] if "action" in kwargs else "" %}
   {% set method = kwargs["method"] if "method" in kwargs else "POST"%}
+  {% set enctype = kwargs["enctype"] if "enctype" in kwargs else "application/x-www-form-urlencoded"%}
   {% set data_controller = kwargs["data_controller"] if "data_controller" in kwargs else None %}
   {% set data_controller = "data-controller=\""+ data_controller +"\"" if data_controller else "" %}
   {% set form_class = kwargs["form_class"] if "form_class" in kwargs else ""%}
@@ -60,7 +57,7 @@
   {% set input_class_map   = kwargs["input_class_map"]   if "input_class_map"   in kwargs else {} %}
   {% set wrapper_class_map = kwargs["wrapper_class_map"] if "wrapper_class_map" in kwargs else {} %}
 
-  <form class="{{form_class}}" {{data_controller}} method="{{method}}" action="{{action}}">
+  <form class="{{form_class}}" {{data_controller}} enctype="{{enctype}}" method="{{method}}" action="{{action}}">
     {% if form.errors %}
       {% for reason, message in form.errors.items() %}
       <div class="message error">{{message}}</div> 
@@ -76,4 +73,37 @@
       {{ render_input(input, value=value, class=input_class, wrapper_class=wrapper_class)}}
     {% endfor %}
   </form>
+{% endmacro %}
+
+
+# general purpose macro for extracting images from an entity. Assumes that
+# there is a list of image urls on the entity. The title can be injected, as
+# well as ownership of the entity to allow 'add picture' and 'remove' picture
+# widgets.
+{% macro get_entity_images(entity, id) %}
+  
+  {% set is_owner  = kwargs['is_owner'] if 'is_owner' in kwargs else False %}
+  {% set title_key = kwargs['title_key'] if 'title_key' in kwargs else 'title'%}
+  {% set title     = kwargs['title'] if 'title' in kwargs else entity[title_key] %}
+
+  {% if is_owner %}
+    <div title="add new image for {{title}}" class="button add-image">Add Image</div>
+  {% endif %}
+
+  <div class="aggregate image">
+    {% for image_url in entity.image_urls %}
+    <div class="image-wrapper">
+      {# Please note: these buttons will bind to an AJAX request to delete #}
+      {# the entity image. these requests are validated server side that #}
+      {# A.) the logged in user owns this entity #}
+      {# B.) the request has a CSRF token #}
+      {% if is_owner %}
+        <div title="delete image" class="button delete"></div>
+      {% endif %}
+      <div> 
+        <img title="{{title}}" alt="{{title}}" src="{{image_url}}"/>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
 {% endmacro %}

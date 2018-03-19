@@ -16,6 +16,8 @@
 <!-- JS -->
 {# todo: replace with minified version outside of dev environment #}
 <script src="/js/lib/jquery/jquery-3.2.0.min.js"></script>
+<script src="/js/lib/momentjs/moment.js"></script>
+
 {# inline JavaScript to embed site configurations #}
 <script>
 window.app = (function () {
@@ -32,9 +34,23 @@ window.app = (function () {
 
   }
 
+  const date_format = function () {
+
+    return "YYYY-MM-DD HH:mm:ss";
+
+  }
+
+  const date_format_short = function () {
+
+    return "M-D-YYYY";
+
+  }
+
   return {
     site_root  : site_root,
-    site_title : site_title 
+    site_title : site_title,
+    date_format: date_format,
+    date_format_short : date_format_short 
   };
 
 })();

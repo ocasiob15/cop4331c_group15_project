@@ -1,6 +1,6 @@
 {% extends "layouts/page.html" %}
 {% block content %}
-  {% set is_user = user['id'] == viewed_user.id %}
+  {% set is_user = user and user['id'] == viewed_user.id %}
   <div class="nav">
     {% if is_user %}
       <a href="{{url_for("user.edit", id=user['id'])}}">Edit Account</a>
@@ -10,28 +10,32 @@
       <a href="{{url_for("listing.browse")}}">Back to Listings</a>
     {% endif %}
   </div>
-  {% if is_user %}
 
-    <h2>Your Account</h2>
-    
-    <h4>Account Info</h4>
-    <div class="field name">{{viewed_user.first_name}} {{viewed_user.last_name}}</div>
-    <div class="field email">{{viewed_user.email}}</div>
+  <div data-controller="user-profile">
 
-    <h4>Your Listings</h4>
-    <div data-user="{{viewed_user.id}} class="aggregate listing user-created"></div>
+    {% if is_user %}
 
-    <h4>Bought by You</h4>
-    <div data-user="{{viewed_user.id}} class="aggregate listing user-bought"></div>
+      <h2>Your Account</h2>
+      
+      <h4>Account Info</h4>
+      <div class="field name">{{viewed_user.first_name}} {{viewed_user.last_name}}</div>
+      <div class="field email">{{viewed_user.email}}</div>
 
-  {% else %}
+      <h4>Your Listings</h4>
+      <div data-user="{{viewed_user.id}}" class="aggregate listing user-created"></div>
 
-    <h2>{{viewed_user}}'s Profile</h2>
+      <h4>Bought by You</h4>
+      <div data-user="{{viewed_user.id}}" class="aggregate listing user-bought"></div>
 
-    <h3>{{viewed_user.username}}'s Listings</h3>
-    <div data-user="{{viewed_user.id}}" =class="aggregate listing user-created"></div>
+    {% else %}
 
-  {% endif %}
+      <h2>{{viewed_user}}'s Profile</h2>
 
+      <h3>{{viewed_user.username}}'s Listings</h3>
+      <div data-user="{{viewed_user.id}}" class="aggregate listing user-created" ></div>
+
+    {% endif %}
+
+  </div>
 
 {% endblock %}

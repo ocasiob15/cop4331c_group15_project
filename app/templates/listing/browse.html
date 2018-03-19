@@ -1,8 +1,18 @@
 {% extends "layouts/page.html" %}
 {% block content%}
-  <h2>Search Listings</h2>
-  {# todo: render search form #}
-  <div class="aggregate listing">
-    {# listings populated with ajax #}
+  <div data-controller="listing-search">
+
+    <h2>Search Listings</h2>
+
+    {{macros.render_form(
+      form=form, 
+      form_class="listing-search left-justified",
+      action="/listing/search",
+      method="GET",
+    )}}
+
+    {# populated with AJAX #}
+    <div class="aggregate listing"></div>
+
   </div>
 {% endblock %}

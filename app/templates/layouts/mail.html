@@ -1,47 +1,52 @@
 {# template for mail. includes CSS styling #}
 {# include google fonts #}
-<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans"/>
-<style>
+<!DOCTYPE html>
+<html>
+  <body>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans"/>
+    <style>
 
-  #content {
-    font-size: 18px; 
-    font-family: "Open Sans", arial, sans-serif; 
-  }
+      #content {
+        font-size: 18px; 
+        font-family: "Open Sans", arial, sans-serif; 
+      }
 
-  p {
-    line-height: 1.6;
-  }
+      p {
+        line-height: 1.6;
+      }
 
-  a {
-    font-color: #24AAFF;
-  }
+      a {
+        font-color: #24AAFF;
+      }
 
-  a:hover {
-    cursor: pointer;
-  }
+      a:hover {
+        cursor: pointer;
+      }
 
-  a:link, a:active, a:visited {
-    font-color: #AAAAAA;
-  }
+      a:link, a:active, a:visited {
+        font-color: #AAAAAA;
+      }
 
-  #footer {
-    text-align: right; 
-  }
+      #footer {
+        text-align: right; 
+      }
 
-  #footer a {
-    text-align: right; 
-    margin-right: 10px;
-  }
+      #footer a {
+        text-align: right; 
+        margin-right: 10px;
+      }
 
-</style>
+    </style>
 
-<div id="content">
-  {% block content %}
-  {# overwritten by child template #}
-  {% endblock %}
-</div>
+    <div id="content">
+      {% block content %}
+      {# overwritten by child template #}
+      {% endblock %}
+    </div>
 
-<div id="footer">
-  <a href="{{url_for("home")}}">Auction Site</a>
-  <a href="{{url_for("login")}}">Log In</a>
-</div>
+    <div id="footer">
+      <a href="{{site_root}}">Auction Site</a>
+      <a href="{{site_root}}/login">Log In</a>
+    </div>
+  </body>
+</html>

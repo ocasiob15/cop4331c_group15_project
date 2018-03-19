@@ -1,0 +1,14 @@
+{% extends "layouts/page.html" %}
+{% block content %}
+  {% set currency = "bitcoin" if listing.bitcoin else "dollars" %}
+  {{macros.render_form(
+    form=form,
+    title=(
+      "Submit Payment For "
+      "<a href=\"" + url_for('listing.view', listing_id=listing.id)+ "\">" + listing.title + "</a>"
+    ),
+    form_class="payment " + currency,
+    method="POST",
+    action=url_for("payment.new", listing_id=listing.id),
+  )}}
+{% endblock %}

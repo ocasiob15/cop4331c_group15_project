@@ -1,4 +1,27 @@
 {% extends "layouts/page.html" %}
 {% block content%}
-  {# put delete form here #}
+
+  <div data-controller="delete-listing-form">
+
+    <div class="nav">
+      <a href="{{url_for("listing.view", listing_id=listing.id)}}">View Listing</a>
+      <a href="{{url_for("listing.edit", id=listing.id)}}">Edit Listing</a>
+    </div>
+
+    <h2>Remove Listing</h2>
+
+    <p>
+      Removing a listing is permanent. Once completed, your listing my not be retrieved.
+      Would you like to remove your listing? 
+    </p>
+
+    {{macros.render_form(
+      form=form,
+      form_class="delete-listing",
+      method="DELETE",
+      action=url_for("listing.delete", id=listing.id)
+    )}}
+
+  </div>
+
 {% endblock %}

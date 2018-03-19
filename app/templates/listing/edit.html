@@ -1,5 +1,28 @@
 {% extends "layouts/page.html" %}
 {% block content%}
-  <h2>Edit Listing</h2>
-  {# TODO:inject edit form here#}
+
+  <div class="listing edit" data-controller="update-listing-form">
+
+    {% set is_seller = listing.seller_id == user['id'] %}
+
+    <div class="nav">
+      <a href="{{url_for("listing.view", listing_id=listing.id)}}">View Listing</a>
+      <a href="{{url_for("listing.delete", id=listing.id)}}">Delete Listing</a>
+    </div>
+
+    <h2>Edit Listing</h2>
+
+    <h4>Pictures</h4>
+    {{macros.get_entity_images(listing, listing.id, is_owner=is_seller)}}
+
+    <h4>Information</h4>
+    {{macros.render_form(
+      form=form,
+      form_class="update-listing",
+      action=url_for("listing.edit", id=listing.id),
+      method="PUT"
+    )}}
+
+  </div>
+
 {% endblock %}

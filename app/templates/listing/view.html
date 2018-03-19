@@ -1,3 +1,81 @@
 {% extends "layouts/page.html" %}
 {% block content%}
+
+<div data-controller="view-listing" class="view listing {{listing.type}} {{listing.status}}">
+
+  {# navigation available to seller #}
+  {% set is_seller = user and user['id'] == listing.seller_id %}
+
+  <div class="nav">
+    {% if is_seller %}
+    <a href="{{url_for("listing.edit", id=listing.id)}}">Edit Listing</a>
+    <a href="{{url_for("listing.delete", id=listing.id)}}">Delete Listing</a>
+    {% else %}
+    <a href="{{url_for("user.view", id=listing.seller_id)}}">Seller Profile</a>
+    {% endif %}
+  </div>
+
+  <h2>{{listing.title}}</h2>
+
+  {{macros.get_entity_images(listing, listing.id, is_owner=is_seller)}}
+  
+  <p>{{listing.description}}</p>
+
+  {# round the currency if the ask is in dollars #}
+  {% set ask_display = listing.ask if listing.bitcoin else "%.2f" % listing.ask %}
+  {% set currency = "bitcoin" if listing.bitcoin else "dollars" %}
+
+  {% set today = datetime.today() %}
+  <div class="field-wrapper inline start">
+    {% set start_text = "started" if today >= listing.start else "starts" %}
+    <span class="label start">{{start_text}}</span>
+    {{listing.start.strftime("%Y-%m-%d")}}
+  </div>
+
+  |
+
+  <div class="field-wrapper inline end">
+    {% set end_text = "ended" if today >= listing.end else "ends" %}
+    <span class="label end">{{end_text}}</span>
+    {{listing.end.strftime("%Y-%m-%d")}}
+  </div>
+
+
+  <h4> Asking Price - <span class="ask {{currency}}">{{ask_display}}</span></h4>
+
+  {% if currency == "bitcoin" %}
+    <p class="form-prompt">
+      Price conversions above are offered as a courtesy only and do not necessary reflect the current
+      USD to BTC exchange rate. Be absolutely certain that you understand how much BitCoin
+      you are offering for this item and understand that there is no way the Auction Site can
+      retrieve your BitCoin from the seller's wallet.
+    </p>
+  {% endif %}
+
+  {{macros.get_entity_images("listing", listing.id)}}
+
+  {# populate with AJAX #}
+  <div class="aggregate bid"></div>
+
+  {# todo: create payment and bid form #}
+  {# todo: check type of listing #}
+  {# todo: pick the form and put it here #}
+  {% if not user %}
+     <p>
+       <a href="{{url_for("auth.login")}}">Log in</a> or
+       <a href="{{url_for("auth.signup")}}">create an account</a> to bid on auctions and buy listings
+     </p>
+  {% elif listing.type == "auction" %}
+    {{macros.render_form(
+      form=form,
+      form_class="left-justified bid create",
+      action=url_for('listing.place_bid',listing_id=listing.id),
+      method="POST"
+    )}}
+  {% elif listing.type == "buy_now" %}
+    <a class="button" href="{{url_for("payment.new", listing_id=listing.id)}}">Buy Now</a>
+  {% endif %}
+
+</div>
+
 {% endblock %}

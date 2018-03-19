@@ -1,15 +1,23 @@
 {% extends "layouts/page.html" %}
 {% block content%}
-  {{macros.render_form(
-    form,
-    title="Create Listing",
-    method="POST",
-    action="/listing/new",
-    wrapper_class_map={
-      "bitcoin": "half",
-      "style": "half",
-      "start": "half",
-      "end": "half"
-    })
-  }}
+  <div data-controller="create-listing">
+    {{macros.render_form(
+      form=form,
+      title="Create Listing",
+      form_class="create-listing",
+      action=url_for("listing.new"),
+      method="POST",
+      enctype="multipart/form-data",
+      wrapper_class_map={
+        "bitcoin": "third",
+        "ask"    : "third",
+        "type"   : "third",
+        "start"  : "half",
+        "end"    : "half"
+      },
+      input_class_map={
+        "images" : "image-loader",
+      }
+    )}}
+  </div>
 {% endblock %}

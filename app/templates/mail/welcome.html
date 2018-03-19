@@ -3,7 +3,7 @@
 <h2>Welcome!</h2>
 <p>
   Thank you for creating your account at the {{site_title}}. To use your account, you will need to
-  validate it by clicking <a href="{{url_for("auth.authenticate", auth_token=auth_token)}}">this link</a>.
+  validate it by clicking <a href="{{site_root}}{{url_for("auth.authenticate", auth_token=auth_token)}}">this link</a>.
 </p>
 <p>
   if you have recieved this message in error, please delete it. Thanks!

@@ -1,0 +1,11 @@
+{% extends 'layouts/page.html' %}
+{% block content %}
+
+<form enctype="multipart/form-data" action="lol" method="POST">
+  <input id="test" name="files" type="file" multiple /> 
+  <label for="files">Upload Files</label>
+</form>
+
+<script>$(function () { $('#test').image_loader() });</script>
+
+{% endblock %}
