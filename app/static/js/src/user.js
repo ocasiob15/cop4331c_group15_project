@@ -57,11 +57,3 @@ app.controller('user-profile', function ($elem) {
   });
 
 });
-
-// controller for users account
-app.controller('my-account', function ($elem) {
-
-  // bought should only be visible from my account
-  recently_bought_aggregate = $('aggregate.recently-bought', $elem);
-
-});

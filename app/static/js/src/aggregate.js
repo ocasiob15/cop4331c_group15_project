@@ -15,10 +15,10 @@
     source      = configs.source || null;
     params      = configs.params || {};
 
-    var on_load, record_template, no_record_msg;
+    var on_load, after_load, record_template, no_record_msg;
 
     record_template = configs.record_template || function () { return $("<div>"); };
-    no_record_msg   = "<p>Nothing available at this time</p>";
+    no_record_msg   = configs.no_record_msg   ||"<p>Nothing available at this time</p>";
 
     on_load = configs.on_load || function (results) {
 
@@ -38,13 +38,15 @@
         var data = results[i];
 
         var $record = record_template(data); 
-
+        
         // append record template to $this
         $this.append($record); 
 
       }
         
     };
+
+    after_load = configs.after_load || function (data) { };
 
     pagination  = configs.pagination  || false;
 
@@ -63,6 +65,8 @@
 
         on_load(data);
 
+        after_load(data);
+
         return;
 
       }
@@ -70,7 +74,6 @@
       console.log(source, params);
       if (source === null)
         return;
-
 
       // otherwise, try sending AJAX request to source 
       // specified with parameters, then use the on_load
@@ -82,7 +85,13 @@
         method: "GET",
         data: (typeof params === "function" ? params() : params)
       })
-      .then(on_load)
+      .then(function (data) {
+
+        on_load(data);
+
+        after_load(data);
+
+      })
       .catch(function (error) {
 
         console.error(error); 

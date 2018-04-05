@@ -8,11 +8,117 @@
 //// View Listing ////
 app.controller("view-listing", function ($elem) {
 
+
+  /*
+  REMOVED: deprected the bid model, which means there is no
+  entity to query separate from the listing 
   var $bid_aggregate = $('.aggregate.bid');
 
+  listing_id = $bid_aggregate.attr('data-listing');
+
+  var bid_template = app.templates.bid
+
   $bid_aggregate.aggregate({
-    no_record_msg: "No one has placed a bid yet"
+    source: "/listing/" + listing_id + "/bids",
+    record_template: bid_template,
+    no_record_msg  : "No one has placed a bid yet",
+    after_load: function (data) {
+
+      if (!data.length)
+        return; 
+
+      var $ask_label = $('h4 > .field.ask', $elem);
+
+      var top_bid = data[0] || {offer: $ask_label.text()};
+
+      $ask_label.text(top_bid.offer);
+
+    }
   });
+  */
+
+  // ajaxify the bid placement form if it exists
+  $bid_form = $('form.bid.create', $elem);
+
+  var $ask_label = $('h4 > .field.ask', $elem);
+
+  function update_ask (result) {
+
+    if (result.errors || !result.success) {
+
+      var errors = result.errors || {};
+
+      for (var i in errors) {
+
+        var $error = app.templates.error({message: errors[i].pop()});
+
+        $bid_form.prepend($error);
+
+      }
+
+      return;
+
+    }
+
+    var new_ask = result.new_ask;
+
+    $ask_label.text(new_ask);
+
+    // tell the aggregate to reload records from source attribute
+    // REMOVED: deprecated bid model
+    // $bid_aggregate.reload_records();
+
+  }
+
+  $bid_form.length && (function () {
+
+    $bid_form.ajaxify({
+      on_result: update_ask
+    });
+
+  })();
+
+  // every 5 seconds, poll the database for bids
+  // window.setInterval($bid_aggregate.reload_records, 5000);
+  
+  // add in a real-time conversion for price to USD
+  if ($ask_label.hasClass('bitcoin')) {
+
+    var $conversion = $('<h5>').addClass('conversion');
+
+    var $usd = $('<span class="waiting">');
+
+    window.setInterval(function () {
+
+      $.ajax('https://api.coindesk.com/v1/bpi/currentprice.json')
+      .then(function (result) {
+
+        result = result || {};
+        result = JSON.parse(result);
+
+        var bpi = result.bpi || {};
+        var usd = bpi.USD    || {};
+
+        var rate = usd.rate;
+        var rate_num = Number(rate.replace(',', ''));
+
+        var btc = Number($ask_label.text()); 
+
+        $usd.removeClass('waiting');
+
+        $usd.addClass('dollars');
+
+        $usd.text(rate_num * btc);
+
+      });
+      
+    }, 5000);
+
+    $ask_label.after($conversion);
+
+    $conversion.append("Current price in USD: ", $usd);
+
+  }
 
 });
 
@@ -92,7 +198,7 @@ app.controller('listing-search', function ($elem) {
   var initial_values = {};
 
   // get initial values from form if the form input is cached on a page refresh
-  $('input', search_form).not('input[type=submit]').each(function (index, elem) {
+  $('input,select', search_form).not('input[type=submit]').each(function (index, elem) {
 
     console.log(elem);
 
@@ -128,7 +234,7 @@ app.controller('listing-search', function ($elem) {
 
   }
 
-  var $keyword, $start, $end;
+  var $keyword, $sort_by, $sort_ord;
 
   $keyword = $('input.keyword', search_form);
 
@@ -153,10 +259,10 @@ app.controller('listing-search', function ($elem) {
   });
 
   // auto submit when the date is changed
-  $start = $('input.start', search_form);
-  $start.change(auto_submit);
+  $sort_by = $('select.sort_by', search_form);
+  $sort_by.change(auto_submit);
 
-  $end = $('input.end', search_form);
-  $end.change(auto_submit);
+  $sort_ord = $('select.sort_ord', search_form);
+  $sort_ord.change(auto_submit);
 
 });

@@ -44,6 +44,30 @@
 
   }
 
+  function error (data) {
+
+    data = data || {};
+
+    var message = data.message;
+
+    var $error = $('<div class="error">');
+
+    $error.text(message);
+
+    window.setTimeout(function () {
+
+      $error.slideUp(1000, function () {
+
+        $error.remove(); 
+
+      })
+      
+    }, 5000);
+
+    return $error;
+
+  }
+
   function modal (data) {
 
     var message = data.message || "";
@@ -116,7 +140,9 @@
 
   function listing (data) {
 
-    var $listing = $('<div class="record listing">');
+    var status = data.status
+
+    var $listing = $('<div class="record listing">').addClass(status);
 
     var $title, $link, $created, $ask;
 
@@ -152,6 +178,8 @@
 
     var statuses = {
       "active": "Available",
+      "not_started": "Not Started",
+      "ended": "Ended",
       "sold"  : "Sold"
     };
 
@@ -194,10 +222,41 @@
 
   }
 
+  function bid (data) {
+
+    var $bid = $('<div>').attr({
+      class: "record bid"
+    });
+
+    var offer = data.offer || "";
+
+    var $offer = field({name: "offer"})
+    .text(offer);
+
+    var date_format = app.date_format_short();
+
+    var date_created = moment(data.date_created);
+
+    var $date_created = field({
+      name: "date-created",
+      has_label: false,
+      value    : date_created.format(date_format)
+    });
+
+    // probably want time the bid was placed etc etc
+    // probably not necessary to identify by user
+    $bid.append($offer, $date_created);
+
+    return $bid;
+
+  }
+
   app.templates = {
     field  : field,
     modal  : modal,
-    listing: listing
+    listing: listing,
+    bid    : bid,
+    error  : error
   };
 
 })();
