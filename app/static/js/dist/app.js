@@ -205,10 +205,10 @@
     source      = configs.source || null;
     params      = configs.params || {};
 
-    var on_load, record_template, no_record_msg;
+    var on_load, after_load, record_template, no_record_msg;
 
     record_template = configs.record_template || function () { return $("<div>"); };
-    no_record_msg   = "<p>Nothing available at this time</p>";
+    no_record_msg   = configs.no_record_msg   ||"<p>Nothing available at this time</p>";
 
     on_load = configs.on_load || function (results) {
 
@@ -228,13 +228,15 @@
         var data = results[i];
 
         var $record = record_template(data); 
-
+        
         // append record template to $this
         $this.append($record); 
 
       }
         
     };
+
+    after_load = configs.after_load || function (data) { };
 
     pagination  = configs.pagination  || false;
 
@@ -253,6 +255,8 @@
 
         on_load(data);
 
+        after_load(data);
+
         return;
 
       }
@@ -260,7 +264,6 @@
       console.log(source, params);
       if (source === null)
         return;
-
 
       // otherwise, try sending AJAX request to source 
       // specified with parameters, then use the on_load
@@ -272,7 +275,13 @@
         method: "GET",
         data: (typeof params === "function" ? params() : params)
       })
-      .then(on_load)
+      .then(function (data) {
+
+        on_load(data);
+
+        after_load(data);
+
+      })
       .catch(function (error) {
 
         console.error(error); 
@@ -526,6 +535,30 @@
 
   }
 
+  function error (data) {
+
+    data = data || {};
+
+    var message = data.message;
+
+    var $error = $('<div class="error">');
+
+    $error.text(message);
+
+    window.setTimeout(function () {
+
+      $error.slideUp(1000, function () {
+
+        $error.remove(); 
+
+      })
+      
+    }, 5000);
+
+    return $error;
+
+  }
+
   function modal (data) {
 
     var message = data.message || "";
@@ -598,7 +631,9 @@
 
   function listing (data) {
 
-    var $listing = $('<div class="record listing">');
+    var status = data.status
+
+    var $listing = $('<div class="record listing">').addClass(status);
 
     var $title, $link, $created, $ask;
 
@@ -634,6 +669,8 @@
 
     var statuses = {
       "active": "Available",
+      "not_started": "Not Started",
+      "ended": "Ended",
       "sold"  : "Sold"
     };
 
@@ -676,10 +713,41 @@
 
   }
 
+  function bid (data) {
+
+    var $bid = $('<div>').attr({
+      class: "record bid"
+    });
+
+    var offer = data.offer || "";
+
+    var $offer = field({name: "offer"})
+    .text(offer);
+
+    var date_format = app.date_format_short();
+
+    var date_created = moment(data.date_created);
+
+    var $date_created = field({
+      name: "date-created",
+      has_label: false,
+      value    : date_created.format(date_format)
+    });
+
+    // probably want time the bid was placed etc etc
+    // probably not necessary to identify by user
+    $bid.append($offer, $date_created);
+
+    return $bid;
+
+  }
+
   app.templates = {
     field  : field,
     modal  : modal,
-    listing: listing
+    listing: listing,
+    bid    : bid,
+    error  : error
   };
 
 })();
@@ -687,6 +755,19 @@
 (function () {
 
   $(app.bind_controllers);
+
+  // some page loader things
+  $(function () {
+
+    // hide flash message after 5 seconds
+    window.setTimeout(function () {
+
+       $('.flash-message, .message.error').slideUp();
+
+    }, 5000); 
+
+
+  });
 
 })();
 
@@ -700,11 +781,117 @@
 //// View Listing ////
 app.controller("view-listing", function ($elem) {
 
+
+  /*
+  REMOVED: deprected the bid model, which means there is no
+  entity to query separate from the listing 
   var $bid_aggregate = $('.aggregate.bid');
 
+  listing_id = $bid_aggregate.attr('data-listing');
+
+  var bid_template = app.templates.bid
+
   $bid_aggregate.aggregate({
-    no_record_msg: "No one has placed a bid yet"
+    source: "/listing/" + listing_id + "/bids",
+    record_template: bid_template,
+    no_record_msg  : "No one has placed a bid yet",
+    after_load: function (data) {
+
+      if (!data.length)
+        return; 
+
+      var $ask_label = $('h4 > .field.ask', $elem);
+
+      var top_bid = data[0] || {offer: $ask_label.text()};
+
+      $ask_label.text(top_bid.offer);
+
+    }
   });
+  */
+
+  // ajaxify the bid placement form if it exists
+  $bid_form = $('form.bid.create', $elem);
+
+  var $ask_label = $('h4 > .field.ask', $elem);
+
+  function update_ask (result) {
+
+    if (result.errors || !result.success) {
+
+      var errors = result.errors || {};
+
+      for (var i in errors) {
+
+        var $error = app.templates.error({message: errors[i].pop()});
+
+        $bid_form.prepend($error);
+
+      }
+
+      return;
+
+    }
+
+    var new_ask = result.new_ask;
+
+    $ask_label.text(new_ask);
+
+    // tell the aggregate to reload records from source attribute
+    // REMOVED: deprecated bid model
+    // $bid_aggregate.reload_records();
+
+  }
+
+  $bid_form.length && (function () {
+
+    $bid_form.ajaxify({
+      on_result: update_ask
+    });
+
+  })();
+
+  // every 5 seconds, poll the database for bids
+  // window.setInterval($bid_aggregate.reload_records, 5000);
+  
+  // add in a real-time conversion for price to USD
+  if ($ask_label.hasClass('bitcoin')) {
+
+    var $conversion = $('<h5>').addClass('conversion');
+
+    var $usd = $('<span class="waiting">');
+
+    window.setInterval(function () {
+
+      $.ajax('https://api.coindesk.com/v1/bpi/currentprice.json')
+      .then(function (result) {
+
+        result = result || {};
+        result = JSON.parse(result);
+
+        var bpi = result.bpi || {};
+        var usd = bpi.USD    || {};
+
+        var rate = usd.rate;
+        var rate_num = Number(rate.replace(',', ''));
+
+        var btc = Number($ask_label.text()); 
+
+        $usd.removeClass('waiting');
+
+        $usd.addClass('dollars');
+
+        $usd.text(rate_num * btc);
+
+      });
+      
+    }, 5000);
+
+    $ask_label.after($conversion);
+
+    $conversion.append("Current price in USD: ", $usd);
+
+  }
 
 });
 
@@ -784,7 +971,7 @@ app.controller('listing-search', function ($elem) {
   var initial_values = {};
 
   // get initial values from form if the form input is cached on a page refresh
-  $('input', search_form).not('input[type=submit]').each(function (index, elem) {
+  $('input,select', search_form).not('input[type=submit]').each(function (index, elem) {
 
     console.log(elem);
 
@@ -820,7 +1007,7 @@ app.controller('listing-search', function ($elem) {
 
   }
 
-  var $keyword, $start, $end;
+  var $keyword, $sort_by, $sort_ord;
 
   $keyword = $('input.keyword', search_form);
 
@@ -845,11 +1032,11 @@ app.controller('listing-search', function ($elem) {
   });
 
   // auto submit when the date is changed
-  $start = $('input.start', search_form);
-  $start.change(auto_submit);
+  $sort_by = $('select.sort_by', search_form);
+  $sort_by.change(auto_submit);
 
-  $end = $('input.end', search_form);
-  $end.change(auto_submit);
+  $sort_ord = $('select.sort_ord', search_form);
+  $sort_ord.change(auto_submit);
 
 });
 
@@ -888,6 +1075,75 @@ app.controller('home-page', function ($elem) {
     },
     record_template: listing_template
   });
+
+});
+
+app.controller('payment-form', function ($elem) {
+
+  var $form = $('form.payment', $elem);
+
+  // ajaxify the form
+  $form.ajaxify({
+    on_result: function (result) {
+
+      if (!result.success) {
+
+        // TODO: handle result.errors and put on page
+        console.error(result);
+        return;
+
+      }
+
+      window.location = result.redirect;
+
+    }
+  });
+
+  // give checkbox functionality to set shipping based on billing
+  var $same_as_billing = $('input#same_as_billing', $form);
+
+  // billing fields
+  var $bill_street, $bill_city, $bill_state, $bill_zip;
+
+  $bill_street = $('input#billing_street');
+  $bill_city   = $('input#billing_city');
+  $bill_state  = $('input#billing_state');
+  $bill_zip    = $('input#billing_zip');
+  
+
+  // shipping fields
+  var $ship_street, $ship_city, $ship_state, $ship_zip;
+
+  $ship_street = $('input#shipping_street');
+  $ship_city   = $('input#shipping_city');
+  $ship_state  = $('input#shipping_state');
+  $ship_zip    = $('input#shipping_zip');
+
+
+  function copy_billing () {
+
+    var same = $same_as_billing[0].checked;
+
+    if (same) {
+
+      $ship_street.val($bill_street.val());
+      $ship_city.val($bill_city.val());
+      $ship_state.val($bill_state.val());
+      $ship_zip.val($bill_zip.val());
+
+      return;
+
+    }
+
+    // otherwise set to blank
+    $ship_street.val('');
+    $ship_city.val('');
+    $ship_state.val('');
+    $ship_zip.val('');
+
+  } 
+
+  $same_as_billing.change(copy_billing);
 
 });
 
@@ -948,13 +1204,5 @@ app.controller('user-profile', function ($elem) {
     params: {seller_id: seller_id, start: moment(new Date(0)).format(date_format)},
     record_template: listing_template
   });
-
-});
-
-// controller for users account
-app.controller('my-account', function ($elem) {
-
-  // bought should only be visible from my account
-  recently_bought_aggregate = $('aggregate.recently-bought', $elem);
 
 });
