@@ -32,16 +32,24 @@ def login():
             or_(User.username == credentials, User.email == credentials)
         ).first()
 
-        if (user.blocked == 1):
+        if user is None:
+            form.errors['credentials'] = ["Invalid credentials or password"]
+
+        elif (user.blocked == 1):
             error = "This account is unable to log in. "
             error += "Make sure it is authenticated, or has not been blocked."
             form.errors['unauthorized'] = error
 
         elif (user is not None and bcrypt.checkpw(password, user.hash)):
+
+            # put user in the session
             session['user'] = {"id": user.id, "username": user.username, "admin": user.admin}
+
+            # redirect to account
             return redirect(url_for('user.account'))
+
         else:
-            form.errors['credentials'] = "Invalid credentials or password"
+            form.errors['credentials'] = ["Invalid credentials or password"]
 
     return render_template("auth/login.html", page_title="Log In", form=form)
 
@@ -86,7 +94,7 @@ def signup():
 
         # build message
         msg = Message(
-            "Welcom to the Auction Site",
+            "Welcome to the Auction Site",
             sender=app.config['MAIL_USERNAME'],
             recipients=[email],
             html=welcome_body
