@@ -3,9 +3,12 @@ from flask import Blueprint, request, render_template, \
 
 import json
 
-from app import db
+from app import app, db, mail
 
-from app.payment import coinbase, paypal
+from flask_mail import Message
+
+from app.payment.square import fulfill_usd_payment, fulfill_btc_payment
+
 from app.payment.forms import CreatePaypalPaymentForm, CreateBitcoinPaymentForm
 
 from app.listing.models import Listing
@@ -20,6 +23,13 @@ payment = Blueprint('payment', __name__)
 @payment.route('/listing/<int:listing_id>/pay/', methods=['GET', 'POST'])
 def new(listing_id):
 
+    # get user from session
+    user = session['user'] if 'user' in session else None
+
+    # redirect to login
+    if user is None:
+        return redirect(url_for('auth.login'))
+
     # query listing
     listing = db.session.query(Listing).get(listing_id)
 
@@ -29,6 +39,7 @@ def new(listing_id):
 
     if listing.bitcoin:
         form = CreateBitcoinPaymentForm(request.form)
+
     else:
         form = CreatePaypalPaymentForm(request.form)
 
@@ -36,55 +47,66 @@ def new(listing_id):
 
     # check request method
     if request.method == "POST":
-    # is POST
-        user = session['user'] if 'user' in session else None
-        # get user from session
-
-        # redirect? somehow allow guest payment?
-        if user is None:
-            return redirect(url_for('home'))
-
 
         # if listing is auction
-        elif listing.type == "auction":
+        if listing.type == "auction":
+
             # redirect if user not winner (undecided until auction ends)
-            if user is None or user['id'] != listing.winner:
+            if user['id'] != listing.winner:
                 return redirect(url_for('home'))
 
-            # proceed if user is winner
+        # proceed if user is winner
 
+        # return json errors if form does not validate
+        if not form.validate_on_submit():
+            return jsonify({"success": False, "errors":form.errors})
 
         # if listing is bitcoin
         if listing.bitcoin:
-            pass
-
-
-            # ping wallet to verify? maybe not necessary
-
-            # ping seller wallet? maybe not necessary
-
-            # take payment information from form
-
-            # wallet ok? fullfill payment?
+            result = fulfill_btc_payment(listing.ask)
 
         # else (usd)
         else:
-            pass
-            # ping api to verify? maybe not necessary
-
-            # ping api for seller? maybe not necessary
-
-            # take payment information from form
-
-        # attempt payment
+            result = fulfill_usd_payment(listing.ask)
 
         # success!
-            # insert record using Payment model
-            # set flash message
-            # redirect to (same page? home page? account?)
+        if (type(result) == dict):
+            errors = result['errors'] if 'errors' in result else None
+        else:
+            errors = getattr(result, 'errors', None)
 
-        # fail!
-            # set error on form and refresh
+        if not errors:
+
+            # mark listing as sold if it isn't yet
+            listing.status = "sold"
+
+            db.session.commit()
+
+            # set flash message
+            msg = ("Thank you for completing your purchase "
+                   "for %s. The seller will be notified by e-mail "
+                   "and will send your item shortly.") % (listing.title)
+
+            flash(msg)
+
+            # get winner user record
+            winner = db.session.query(User).get(user['id'])
+
+            # send seller an e-mail with shipping info
+            mail_body = render_template('mail/sold.html', listing=listing, form=form, winner=winner)
+
+            email = Message(
+              "Your Item Has Sold",
+              sender=app.config['MAIL_USERNAME'],
+              recipients=[seller.email],
+              html=mail_body
+            )
+
+            mail.send(email)
+
+        result['redirect'] = url_for("listing.view", listing_id=listing.id)
+
+        return jsonify(result)
 
     # request is GET. render the form
 
