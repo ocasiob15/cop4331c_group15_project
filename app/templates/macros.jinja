@@ -6,6 +6,8 @@
   {% set value         = kwargs["value"]         if "value" in kwargs         else input.default %}
   {% set value         = value                   if value != None           else "" %}
   {% set title         = kwargs["title"]         if "title" in kwargs         else input.description%}
+  {% set prefix = kwargs['prefix'] %}
+  {% set suffix = kwargs['suffix'] %}
 
   {% if input.type == "BooleanField" %}
     {% set value = "1" %}
@@ -20,6 +22,7 @@
   {% elif required %}
     {% set type = wtf_type_types[input.type] if input.type in wtf_type_types else "text" %}
     {# for all other types, wrap in a wrapper and allow attributes passed in above #}
+    {{prefix}}
     <div class="form-input-wrapper {{input.name}} {{wrapper_class}} required">
       {{input.label}}
       {{input(id=input.id,
@@ -30,7 +33,9 @@
               title=title)
       }}
     </div>
+    {{suffix}}
   {% else %}
+    {{prefix}}
     <div class="form-input-wrapper {{input.name}} {{wrapper_class}}">
       {{input.label}}
       {{input(id=input.id,
@@ -40,6 +45,7 @@
               title=title)
       }}
     </div>
+    {{suffix}}
   {% endif %}
 {% endmacro %}
 
@@ -53,14 +59,17 @@
   {% set data_controller = "data-controller=\""+ data_controller +"\"" if data_controller else "" %}
   {% set form_class = kwargs["form_class"] if "form_class" in kwargs else ""%}
 
-  {# mappings of input names to CSS class #}
+  {# mappings of input names to HTML prefixes and suffixes#}
+  {% set prefix_map = kwargs["prefix_map"]   if "prefix_map" in kwargs else {} %}
+  {% set suffix_map = kwargs["suffix_map"]   if "suffix_map" in kwargs else {} %}
+
   {% set input_class_map   = kwargs["input_class_map"]   if "input_class_map"   in kwargs else {} %}
   {% set wrapper_class_map = kwargs["wrapper_class_map"] if "wrapper_class_map" in kwargs else {} %}
 
   <form class="{{form_class}}" {{data_controller}} enctype="{{enctype}}" method="{{method}}" action="{{action}}">
     {% if form.errors %}
       {% for reason, message in form.errors.items() %}
-      <div class="message error">{{message}}</div> 
+        <div class="message error {{reason}}">{{message}}</div> 
       {% endfor %}
     {% endif %}
     {% if title != None %}
@@ -69,8 +78,11 @@
     {% for input in form %}
       {% set value = input.data or None %}
       {% set input_class   = input_class_map[input.name]   if input.name in input_class_map else   "" %}
+      {% set prefix        = prefix_map[input.name]        if input.name in prefix_map else "" %}
+      {% set suffix        = suffix_map[input.name]        if input.name in suffix_map else "" %}
+      {% set input_class   = input_class_map[input.name]   if input.name in input_class_map else   "" %}
       {% set wrapper_class = wrapper_class_map[input.name] if input.name in wrapper_class_map else "" %}
-      {{ render_input(input, value=value, class=input_class, wrapper_class=wrapper_class)}}
+      {{ render_input(input, value=value, class=input_class, prefix=prefix, suffix=suffix, wrapper_class=wrapper_class)}}
     {% endfor %}
   </form>
 {% endmacro %}

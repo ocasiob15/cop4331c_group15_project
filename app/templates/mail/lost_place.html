@@ -1,0 +1,6 @@
+{% extends "layouts/mail.html" %}
+{% block content %}
+You no longer have the leading bid on
+<a href="{{url_for("listing.view", listing_id=listing.id)}}">{{listing.title}}</a>.
+Put in a higher bid before {{strftime("%Y-%m-%d %r",listing.end)}}
+{% endblock %}

@@ -1,14 +1,28 @@
 {% extends "layouts/page.html" %}
 {% block content %}
   {% set currency = "bitcoin" if listing.bitcoin else "dollars" %}
-  {{macros.render_form(
-    form=form,
-    title=(
-      "Submit Payment For "
-      "<a href=\"" + url_for('listing.view', listing_id=listing.id)+ "\">" + listing.title + "</a>"
-    ),
-    form_class="payment " + currency,
-    method="POST",
-    action=url_for("payment.new", listing_id=listing.id),
-  )}}
+  <div class="new-payment {{currency}}" data-controller="payment-form">
+    {{macros.render_form(
+      form=form,
+      title=(
+        "Submit Payment For "
+        "<a href=\"" + url_for('listing.view', listing_id=listing.id)+ "\">" + listing.title + "</a>"
+      ),
+      form_class="payment " + currency,
+      method="POST",
+      action=url_for("payment.new", listing_id=listing.id),
+      wrapper_class_map={
+        "billing_city": "third",
+        "billing_state": "third",
+        "billing_zip": "third",
+        "shipping_city": "third",
+        "shipping_state": "third",
+        "shipping_zip": "third",
+      },
+      prefix_map={
+        "billing_street" : "<h4>Billing Information</h4>",
+        "shipping_street": "<h4>Shipping Information</h4>",
+      }
+    )}}
+  </div>
 {% endblock %}

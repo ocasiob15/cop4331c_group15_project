@@ -6,6 +6,8 @@
   {# navigation available to seller #}
   {% set is_seller = user and user['id'] == listing.seller_id %}
 
+  {% set unavailable = listing.status != "active" %}
+
   <div class="nav">
     {% if is_seller %}
     <a href="{{url_for("listing.edit", id=listing.id)}}">Edit Listing</a>
@@ -15,7 +17,15 @@
     {% endif %}
   </div>
 
-  <h2>{{listing.title}}</h2>
+  {% set types = {"auction":"Auction","buy_now":"Buy It Now"}%}
+  {% set type_label = types[listing.type] %}
+
+  <h2>{{listing.title}} - {{type_label}}</h2>
+
+  {% set statuses = {"active":"Available","not_started":"Not Started","ended":"Ended", "sold":"Sold"}%}
+  {% set status_label = statuses[listing.status] %}
+  
+  <div class="field status"><h4>{{status_label}}</h4></div>
 
   {{macros.get_entity_images(listing, listing.id, is_owner=is_seller)}}
   
@@ -40,40 +50,45 @@
     {{listing.end.strftime("%Y-%m-%d")}}
   </div>
 
-
-  <h4> Asking Price - <span class="ask {{currency}}">{{ask_display}}</span></h4>
+  <h4> Asking Price - <span class="field ask {{currency}}">{{ask_display}}</span></h4>
 
   {% if currency == "bitcoin" %}
     <p class="form-prompt">
-      Price conversions above are offered as a courtesy only and do not necessary reflect the current
-      USD to BTC exchange rate. Be absolutely certain that you understand how much BitCoin
+      Price conversions above are offered as a courtesy only and do not necessarily reflect the current
+      BTC to USD exchange rate. Be absolutely certain that you understand how much BitCoin
       you are offering for this item and understand that there is no way the Auction Site can
       retrieve your BitCoin from the seller's wallet.
     </p>
   {% endif %}
 
-  {{macros.get_entity_images("listing", listing.id)}}
+  {# REMOVED: bid model deprecated #}
+  {# <h4>Current Bids</h4> #}
+  {#populate with AJAX#}
+  {# <div data-listing="{{listing.id}}" class="aggregate bid {{currency}}"></div> #}
+  {% if unavailable %}
 
-  {# populate with AJAX #}
-  <div class="aggregate bid"></div>
+    <p>This listing is not available because it has <b>{{status_label.lower()}}</b></p>
 
-  {# todo: create payment and bid form #}
-  {# todo: check type of listing #}
-  {# todo: pick the form and put it here #}
-  {% if not user %}
-     <p>
+  {% elif not user %}
+
+     <p class="text-center">
        <a href="{{url_for("auth.login")}}">Log in</a> or
        <a href="{{url_for("auth.signup")}}">create an account</a> to bid on auctions and buy listings
      </p>
+
   {% elif listing.type == "auction" %}
+
     {{macros.render_form(
       form=form,
       form_class="left-justified bid create",
       action=url_for('listing.place_bid',listing_id=listing.id),
       method="POST"
     )}}
+
   {% elif listing.type == "buy_now" %}
-    <a class="button" href="{{url_for("payment.new", listing_id=listing.id)}}">Buy Now</a>
+
+    <a class="big button" href="{{url_for("payment.new", listing_id=listing.id)}}">Buy Now</a>
+
   {% endif %}
 
 </div>

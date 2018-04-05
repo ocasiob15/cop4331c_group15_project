@@ -2,8 +2,10 @@
 {% block content %}
 <h2>Congrats!</h2>
 <p>
-  We are informing you that you've won the auction for <a href="{url for listing}">{listing name here}</a>.
-  The seller will receive notification once you have <a>made your payment</a>. Your feedback for the seller
-  will be greatly appreciated by everyone in the auction community.
+  We are informing you that you've won the auction for 
+  <a href="{{url_for('listing.view', listing_id=listing.id)}}">{{listing.title}}</a>.
+  The seller will receive notification once you have
+  <a href="{{url_for("payment.new", listing_id=listing.id)}}">made your payment</a>.
+  Your feedback for the seller will be greatly appreciated by everyone in the auction community.
 </p>
 {% endblock %}

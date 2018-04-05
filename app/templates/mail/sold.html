@@ -2,7 +2,44 @@
 {% block content %}
 <h2>Your Listing has Sold</h2>
 <p>
-  Your item, {listing here}, has been purchased by {user name}. The sellers address is provided under
-  your view of the listing.
+  Your item, {{listing.title}}, has been purchased! Below is the seller's shipping and
+  billing address.
 </p>
+
+<h4>Buyer Information</h4>
+<table>
+  <tr>
+    <td>First Name</td><td>Last Name</td><td>E-mail</td>
+  </tr>
+  <tr>
+    <td>{{winner.first_name}}</td><td>{{winner.last_name}}</td><td>{{winner.email}}</td>
+  </tr>
+</table>
+
+
+<h4>Billing Information</h4>
+<table>
+  <tr>
+    <td>Address</td><td>City</td><td>State</td><td>Zip</td>
+  </tr>
+  <tr>
+    <td>{{form.billing_street.data}}</td>
+    <td>{{form.billing_city.data}}</td>
+    <td>{{form.billing_state.data}}</td>
+    <td>{{form.billing_zip.data}}</td>
+  </tr>
+</table>
+
+<h4>Shipping Information</h4>
+<table>
+  <tr>
+    <td>Address</td><td>City</td><td>State</td><td>Zip</td>
+  </tr>
+  <tr>
+    <td>{{form.shipping_street.data}}</td>
+    <td>{{form.shipping_city.data}}</td>
+    <td>{{form.shipping_state.data}}</td>
+    <td>{{form.shipping_zip.data}}</td>
+  </tr>
+</table>
 {% endblock %}
