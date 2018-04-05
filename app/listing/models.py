@@ -5,6 +5,8 @@ from app.customized.sqlalchemy import sqla_todict
 from sqlalchemy.dialects.mysql import INTEGER
 from sqlalchemy.ext.hybrid import hybrid_property
 
+from datetime import datetime
+
 class Listing(db.Model):
 
     __tablename__ = "listing"
@@ -24,11 +26,12 @@ class Listing(db.Model):
         db.ForeignKey('user.id')
     )
 
-
     type = db.Column('type', db.VARCHAR(45), default="auction", nullable=False)
 
     # includes [active, not_started, sold]
     status = db.Column('status', db.VARCHAR(45), default="active", nullable=False)
+
+    date_created = db.Column('date_created', db.DATETIME, nullable=False, default=datetime.now)
 
     # start and end date. duration calculated functionally
     start = db.Column('start', db.DATETIME, nullable=False)
@@ -56,6 +59,7 @@ class Listing(db.Model):
     def to_dict(self):
       return sqla_todict(self)
 
+"""
 # bids are modeled here because the bid behaves moreso like a relationship table
 # "user bids on a listing". Routes will also heavily rely on listing id.
 class Bid(db.Model):
@@ -78,10 +82,15 @@ class Bid(db.Model):
         primary_key=True
     )
 
+    date  = db.Column('date', db.DATETIME, nullable=False, default=datetime.now)
+
     offer = db.Column('offer', db.DECIMAL(15, 8), nullable=False)
 
-    def __init__(self, user_id):
-        self.user_id = user_id
+    def __init__(self, user_id, listing_id, offer):
+        self.user_id    = user_id
+        self.listing_id = listing_id
+        self.offer      = offer
 
     def to_dict(self):
-      return sqla_todict(self)
+        return sqla_todict(self)
+"""
