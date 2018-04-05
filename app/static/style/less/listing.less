@@ -31,6 +31,7 @@ form.listing-search .form-input-wrapper.end{
   margin-right: 25px;
 }
 
+
 .listing.record .field.title {
   font-size: 1.3em;
 }
@@ -52,14 +53,23 @@ form.listing-search .form-input-wrapper.end{
   vertical-align: middle;
 }
 
+.listing.record.sold .field-wrapper.type,
+.listing.record.ended .field-wrapper.type {
+  color: @color-3;
+}
+
+.listing.record.sold,
+.listing.record.ended {
+  color: @color-4;
+}
+
 /** Edit Listing **/
 .listing.edit {
   width: 600px;
   margin: 0 auto;
 }
 
-form.update-listing > h3,
-form.update-listing .form-input-wrapper {
+form.update-listing > h3 {
   max-width: 300px;
   margin-left: auto;
   margin-right: auto;
@@ -74,6 +84,8 @@ form.update-listing .form-input-wrapper {
 
 .aggregate.image {
   overflow: auto;
+  background-color: @color-4;
+  .transition-property(max-height .7s);
 }
 
 .image-wrapper > div.button.delete {
@@ -96,6 +108,16 @@ form.update-listing .form-input-wrapper {
   vertical-align: middle;
 }
 
+/* looks weird to show these with the kleene star */
+.form-input-wrapper.sort_ord.required label:after,
+.form-input-wrapper.sort_by.required label:after {
+  content: none;
+}
+
+form.update-listing .form-input-wrapper {
+  margin-left: 0;
+  margin-right: 0;
+}
 
 /** Media Queries **/
 @media screen and (max-width: @tablet-width) {

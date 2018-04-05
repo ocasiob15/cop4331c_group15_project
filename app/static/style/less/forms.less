@@ -2,8 +2,19 @@
 /* so much styling is often of the behalf of forms...*/
 /* overwrite skeletons button styling */
 .button, button, input[type="submit"], input[type="reset"], input[type="button"] {
-  height   : 4em;
+  height   : 3em;
   font-size: .7em;
+}
+
+.button.big {
+  background-color: @color-6;
+  color: @color-0;
+  border-radius: 8px;
+  height: 3em;
+  font-size: 1em;
+  display: table-cell;
+  vertical-align: middle;
+  margin-bottom: 20px;
 }
 
 textarea {
@@ -67,22 +78,39 @@ input[required]:after, label.required:after,
 
 form .message {
   text-align: center;
+  padding: 20px 0;
 }
 
 /* reserve a small amount of space at top of form for icon communication */
 form.left-justified.ajaxified,
 form.ajaxified {
   margin-top: 3em;
+  position: relative;
 }
 
-form[method=PUT].finished:before {
-  content: "Saved"
+form.ajaxified.finished:before {
+  content: "";
+  display: block;
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  width: 32px;
+  height: 32px;
+  background-repeat: no-repeat; 
+  background-size: 100% 100%;
+  -webkit-animation: fade-in-out 3s 1;
+  -moz-animation: fade-in-out 3s 1;
+  -o-animation: fade-in-out 3s 1;
+  animation: fade-in-out 3s 1;
+  opacity: 0;
 }
 
-form[method=GET].finished:before,
-form[method=POST].finished:before,
-form[method=DELETE].finished:before {
-  content: "Done"
+form.ajaxified.finished:before {
+  background-image: url("/img/icons/ok.png");
+}
+
+form.ajaxified.finished.error:before {
+  background-image: url("/img/icons/error.png");
 }
 
 .form-prompt {
@@ -116,8 +144,9 @@ form[method=DELETE].finished:before {
   height: 175px;
   width: 175px;
   float: left;
-  border-top: 1px solid @color-4;
-  border-bottom: 1px solid @color-4;
+  border-top: 1px solid @color-3;
+  border-bottom: 1px solid @color-3;
+  background-color: @color-0;
 }
 
 .image-wrapper > div {

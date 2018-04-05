@@ -36,6 +36,11 @@
   color: @color-error;
 }
 
+.text-center {
+  text-align: center;
+}
+
+
 .inline {
   display: inline-block;
 }
@@ -121,52 +126,40 @@
 
 }
 
-/* fly in and vanish */
 @keyframes fly-in {
 
   0% {
-    left: 30%;
     opacity: 0;
   }
 
   30% {
-
-    left: 0%;
-    opacity: 1;
-
+    opacity: .5;
   }
 
+  60% {
+    opacity: .8;
+  }
 
-  90% {
-
-    left: 0%;
+  70% {
     opacity: 1;
-
   }
 
   100% {
-
-    left: -10%;
-    opacity: 0;
-
+    opacity: 1;
   }
 
 }
 
-/* mix in */
 .fly-in {
-  animation: fly-in 1 3s;
+  opacity: 0;
 }
 
-.waiting, .finished, .error {
-  position: relative; 
+.fly-in.loaded {
 }
 
 .waiting:before, .finished:before, .error:before {
-  position: absolute; 
-  bottom  : 100%;
-  left    : 0;
   font-size: 1.5em;
+  margin-right: .5em;
 }
 
 /* by defaut, elipsis show up above the element. overwrite as necessary */
@@ -177,19 +170,39 @@
 }
 
 /* by default offer a checkmark to indicate success */
+/*
 .finished:before {
   content : "OK";
   color    : @color-6;
-  opacity: 0;
-  .fly-in;
 }
+*/
 
 /* by default offer an X to indicate error */
-.error:before {
-  content : "x";
-  color    : @color-error;
-  opacity: 0;
-  .fly-in;
+
+@keyframes fade-in-out {
+
+  0% {
+    opacity: 0;
+  }
+
+  20% {
+
+    opacity: 1;
+
+  }
+
+  80% {
+
+    opacity: 1;
+
+  }
+
+  100% {
+
+    opacity: 0;
+
+  }
+
 }
 
 @keyframes flashing {
@@ -228,10 +241,12 @@
   }
 }
 
+.dollars .offer:before,
 span.dollars:before {
   content: "$"
 }
 
+.bitcoin .offer:before,
 span.bitcoin:before {
   content: "\0E3F"
 }
