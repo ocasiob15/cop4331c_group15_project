@@ -12,15 +12,12 @@ SQLALCHEMY_TRACK_MODIFICATIONS = False
 # configured to use root with no password on localhost
 SQLALCHEMY_DATABASE_URI = "mysql://root:@localhost:3360/group_15_project"
 
-# paypal api
-PAYPAL_EMAIL  = "cop4331cgroup15test@gmail.com"
-PAYPAL_PW     = "Fifteen-testS15"
-PAYPAL_KEY    = ""
-PAYPAL_SECRET = ""
-
-# coinbase api
-COINBASE_KEY    = ""
-COINBASE_SECRET = ""
+# Square connect V2 API
+# credentials for dev enviorenment are using square's anonymous sandbox
+SQUARE_API_V  = "2.0"
+SQUARE_TOKEN  = "sandbox-sq0atb-L4N6OrmojvH42KPjRms1-w"
+SQUARE_APP_ID = "sandbox-sq0idp-PZwrvQNeA8bbbh510cXqPQ"
+SQUARE_LOCATION_ID = "CBASEDJiwU9tyGgAZW-uRZ1598kgAQ"
 
 # mail settings
 MAIL_SERVER   = "smtp.gmail.com"
