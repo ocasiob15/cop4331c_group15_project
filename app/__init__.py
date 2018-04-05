@@ -54,13 +54,11 @@ app.register_error_handler(404, default_handler)
 from app.auth.controllers    import auth    as auth_controller
 from app.user.controllers    import user    as user_controller
 from app.listing.controllers import listing as listing_controller
-from app.tag.controllers     import tag     as tag_controller
 from app.payment.controllers import payment as payment_controller
 # and so on...
 
 app.register_blueprint(auth_controller)
 app.register_blueprint(listing_controller)
-app.register_blueprint(tag_controller)
 app.register_blueprint(user_controller)
 app.register_blueprint(payment_controller)
 # see auth module for example. user model started, please adjust
